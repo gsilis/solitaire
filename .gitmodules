@@ -1,0 +1,3 @@
+[submodule "card-shoe"]
+	path = card-shoe
+	url = https://github.com/gsilis/card-shoe.git
