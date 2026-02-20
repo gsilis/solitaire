@@ -1,7 +1,7 @@
 import { LabelFactory } from "../factories/label-factory"
 import { SuitFactory } from "../factories/suit-factory"
 import { CARD_FONT } from "./fonts"
-import { Shoe } from "card-shoe/shoe"
+import { Shoe } from "card-shoe"
 
 let gameData: GameData
 

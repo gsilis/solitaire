@@ -1,38 +1,38 @@
 import { Actor, ActorArgs, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
-import { Values } from "card-shoe";
+import { Card, ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, Value } from "card-shoe";
 import { GameData } from "../data/game-data";
 import { times } from "../utils/times";
 
 const game = GameData.getInstance()
-const positions: Partial<Record<Values, Vector[]>> = {
-  [Values.ACE]: [
+const positions: Partial<Record<Value, Vector[]>> = {
+  [ACE]: [
     vec(64, 192)
   ],
-  [Values.TWO]: [
+  [TWO]: [
     vec(64, 64),
     vec(64, 96)
   ],
-  [Values.THREE]: [
+  [THREE]: [
     vec(48, 48),
     vec(80, 64),
     vec(112, 80)
   ],
-  [Values.FOUR]: [
+  [FOUR]: [
     vec(48, 48),
     vec(48, 96),
     vec(96, 48),
     vec(96, 48),
   ],
-  [Values.FIVE]: [
+  [FIVE]: [
     vec(48, 48),
     vec(48, 96),
     vec(96, 48),
     vec(96, 48),
     vec(64, 64),
   ],
-  [Values.SIX]: [
+  [SIX]: [
     vec(19, 10),
     vec(20, 20),
     vec(30, 30),
@@ -40,7 +40,7 @@ const positions: Partial<Record<Values, Vector[]>> = {
     vec(50, 50),
     vec(60, 60),
   ],
-  [Values.SEVEN]: [
+  [SEVEN]: [
     vec(32, 10),
     vec(32, 20),
     vec(32, 30),
@@ -49,7 +49,7 @@ const positions: Partial<Record<Values, Vector[]>> = {
     vec(32, 60),
     vec(32, 70),
   ],
-  [Values.EIGHT]: [
+  [EIGHT]: [
     vec(48, 10),
     vec(48, 20),
     vec(48, 30),
@@ -59,7 +59,7 @@ const positions: Partial<Record<Values, Vector[]>> = {
     vec(48, 70),
     vec(48, 80),
   ],
-  [Values.NINE]: [
+  [NINE]: [
     vec(60, 10),
     vec(60, 20),
     vec(60, 30),
@@ -70,7 +70,7 @@ const positions: Partial<Record<Values, Vector[]>> = {
     vec(60, 80),
     vec(60, 90),
   ],
-  [Values.TEN]: [
+  [TEN]: [
     vec(72, 10),
     vec(72, 20),
     vec(72, 30),
