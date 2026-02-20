@@ -28,7 +28,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.2",
-    "card-shoe": "file:./card-shoe/src",
+    "card-shoe": "file:./card-shoe",
     "typescript": "5.9.3",
     "vite": "6.4.1"
   }
