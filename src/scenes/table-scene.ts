@@ -1,4 +1,4 @@
-import { ExcaliburGraphicsContext, Scene, SceneActivationContext } from "excalibur";
+import { Color, ExcaliburGraphicsContext, Scene, SceneActivationContext } from "excalibur";
 import { GameData } from "../data/game-data";
 import { CardGraphic } from "../graphics/card-graphic";
 
@@ -8,7 +8,6 @@ export class TableScene extends Scene {
   private cardGraphic?: CardGraphic
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
-    console.log('ADDED')
     super.onActivate(context)
     const card = game.shoe.deal()
     if (!card) return
@@ -17,8 +16,8 @@ export class TableScene extends Scene {
   }
 
   override onPreDraw(ctx: ExcaliburGraphicsContext, elapsed: number): void {
-    console.log('DRAW')
     super.onPreDraw(ctx, elapsed)
+    this.backgroundColor = Color.Green
 
     if (this.cardGraphic) {
       this.cardGraphic.pos.x = 100
