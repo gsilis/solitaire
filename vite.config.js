@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import commonjs from "vite-plugin-commonjs";
 
 // if you use tiled maps
 // there is a collision between react w/ typescript .tsx
@@ -19,7 +20,7 @@ const tiledPlugin = () => {
 
 export default defineConfig({
     base: './', // optionally give a base path, useful for itch.io to serve relative instead of the default absolut
-    plugins: [tiledPlugin()], // hint vite that tiled tilesets should be treated as external
+    plugins: [tiledPlugin(), commonjs()], // hint vite that tiled tilesets should be treated as external
     // currently excalibur plugins are commonjs
     // this forces vite to keep things from bundling ESM together with commonjs
     optimizeDeps: {

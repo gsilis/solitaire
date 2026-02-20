@@ -8,6 +8,7 @@ export class TableScene extends Scene {
   private cardGraphic?: CardGraphic
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
+    console.log('ADDED')
     super.onActivate(context)
     const card = game.shoe.deal()
     if (!card) return
@@ -16,6 +17,7 @@ export class TableScene extends Scene {
   }
 
   override onPreDraw(ctx: ExcaliburGraphicsContext, elapsed: number): void {
+    console.log('DRAW')
     super.onPreDraw(ctx, elapsed)
 
     if (this.cardGraphic) {

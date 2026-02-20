@@ -1,9 +1,10 @@
 import { LabelFactory } from "../factories/label-factory"
 import { SuitFactory } from "../factories/suit-factory"
 import { CARD_FONT } from "./fonts"
-import { Shoe } from "card-shoe"
+import * as CardShoe from "card-shoe"
 
 let gameData: GameData
+const { Shoe } = CardShoe
 
 export class GameData {
   labelFactory = new LabelFactory(CARD_FONT)

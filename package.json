@@ -30,6 +30,7 @@
     "@types/node": "^22.10.2",
     "card-shoe": "file:./card-shoe",
     "typescript": "5.9.3",
-    "vite": "6.4.1"
+    "vite": "6.4.1",
+    "vite-plugin-commonjs": "^0.10.4"
   }
 }
