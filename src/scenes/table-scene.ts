@@ -5,6 +5,8 @@ import { HangingCardAnchor } from "../objects/hanging-card-anchor";
 import { times } from "../utils/times";
 import { CardObject } from "../objects/card-object";
 import { CardSide } from "../data/card-side";
+import { EmptyStack } from "../objects/empty-stack";
+import { StackShadow } from "../objects/stack-shadow";
 
 const game = GameData.getInstance()
 const width = 128
@@ -17,6 +19,19 @@ export class TableScene extends Scene {
   private targets: HangingCardAnchor[] = times(4).map((_, index) => new StraightCardAnchor({ name: `TargetArea${index}`, width, height }))
   private temporary = new HangingCardAnchor({ name: 'TemporaryStorage', width, height })
   private cards: CardObject[] = []
+
+  onInitialize(engine: Engine): void {
+    super.onInitialize(engine)
+
+    this.deckAnchor.addChild(new EmptyStack())
+    this.displayAnchor.addChild(new StackShadow())
+    this.playAreas.forEach(play => {
+      play.addChild(new StackShadow())
+    })
+    this.targets.forEach(target => {
+      target.addChild(new StackShadow())
+    })
+  }
 
   override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed)
@@ -73,7 +88,7 @@ export class TableScene extends Scene {
       })
 
       this.cards.push(card)
-      this.deckAnchor.setNext(card)
+      this.deckAnchor.last.next = card
       this.add(card)
       cardData = game.deal()
     }

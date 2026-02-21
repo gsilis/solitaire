@@ -35,19 +35,16 @@ export class CardObject extends Actor implements Stackable {
     this._graphics.flip()
   }
 
-  setNext(item: Stackable | null): void {
-    console.log(`Setting next -> ${(item || {}).toString()}`)
-    const last = this._next
-    this._next = item
-    item?.setNext(last)
-  }
-
-  next(): Stackable | null {
+  get next(): Stackable | null {
     return this._next
   }
 
+  set next(stackable: Stackable | null) {
+    this._next = stackable
+  }
+
   tree(): Stackable[] {
-    const items = this._next && this._next.tree() || []
+    const items = this.next && this.next.tree() || []
 
     return [
       this,

@@ -8,19 +8,20 @@ export abstract class CardAnchor extends Actor implements Stackable {
     return this
   }
 
-  next(): Stackable | null {
+  get next(): Stackable | null {
     return this._next
   }
 
-  setNext(item: Stackable): void {
-    const current = this._next
-    console.log(`CURRENT ${item.toString()} -> NEXT ${(current || {}).toString()}`)
-    this._next = item
-    item.setNext(current)
+  set next(stackable: Stackable | null) {
+    this._next = stackable
+  }
+
+  get last(): Stackable {
+    return [...this.tree()].pop() as Stackable
   }
 
   tree(): Stackable[] {
-    const items = this._next && this._next.tree() || []
+    const items = this.next && this.next.tree() || []
 
     return [
       this,
@@ -31,7 +32,7 @@ export abstract class CardAnchor extends Actor implements Stackable {
   override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed)
 
-    let item: Stackable | null = this.next()
+    let item: Stackable | null = this.next
     let count = 0
     while (item) {
       const castAsActor = item as unknown as Actor
@@ -39,7 +40,7 @@ export abstract class CardAnchor extends Actor implements Stackable {
       castAsActor.pos.y = this.pos.y + this.yPositionFor(count)
 
       count += 1
-      item = item.next()
+      item = item.next
     }
   }
 

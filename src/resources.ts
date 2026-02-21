@@ -4,6 +4,8 @@ import { ImageSource, Loader } from "excalibur";
 export const Resources = {
   CardFront: new ImageSource('./images/card-front.png'),
   CardBack: new ImageSource('./images/card-back.png'),
+  CardShade: new ImageSource('./images/card-shade.png'),
+  EmptyStack: new ImageSource('./images/empty-stack.png'),
   Suit: new ImageSource('./images/suits.png'),
 } as const; // the 'as const' is a neat typescript trick to get strong typing on your resources. 
 // So when you type Resources.Sword -> ImageSource

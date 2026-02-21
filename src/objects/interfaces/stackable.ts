@@ -1,5 +1,5 @@
 export interface Stackable {
-  setNext(stackable: Stackable | null): void
-  next(): Stackable | null
+  get next(): Stackable | null
+  set next(stackable: Stackable | null)
   tree(): Stackable[]
 }
