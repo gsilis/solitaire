@@ -1,4 +1,4 @@
-import { Actor, Engine, Sprite, SpriteSheet } from "excalibur";
+import { Actor, Engine, SpriteSheet } from "excalibur";
 import { Resources } from "../resources";
 
 export abstract class SuitGraphic extends Actor {
