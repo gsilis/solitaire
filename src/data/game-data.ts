@@ -22,5 +22,10 @@ export class GameData {
 
   shuffle() {
     this.shoe = new Shoe(1)
+    this.shoe.shuffle()
+  }
+
+  deal() {
+    return this.shoe.deal()
   }
 }

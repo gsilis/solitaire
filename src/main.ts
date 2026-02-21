@@ -1,6 +1,7 @@
 import { Color, DisplayMode, Engine, FadeInOut } from "excalibur";
 import { loader } from "./resources";
-import { TableScene } from "./scenes/table-scene";
+import { TestScene } from "./scenes/test-scene";
+import { TableScene } from "./scenes/table-scene"
 
 // Goal is to keep main.ts small and just enough to configure the engine
 
@@ -11,6 +12,7 @@ const game = new Engine({
   pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
   scenes: {
     table: TableScene,
+    test: TestScene,
   },
   // physics: {
   //   solver: SolverStrategy.Realistic,

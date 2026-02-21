@@ -108,6 +108,7 @@ export class Card {
   get value() { return this._value }
   get symbol() { return ValueSumbols[this.value] }
   get suit() { return this._suit }
+  get suitGlyph() { return SuitSymols[this.suit] }
 
   get isFace() {
     return this._isFace;
