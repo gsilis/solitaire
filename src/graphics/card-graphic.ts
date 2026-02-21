@@ -91,6 +91,8 @@ export class CardGraphic extends Actor {
   private _card: Card
   private _label1: Label
   private _label2: Label
+  private _icon1: Actor
+  private _icon2: Actor
   private _suitMarkers: Actor[] = []
 
   get side() { return this._side }
@@ -112,7 +114,12 @@ export class CardGraphic extends Actor {
     const color = this._card.isRed ? Color.Red : Color.Black
     this._label1 = game.labelFactory.create(this._card.symbol, undefined, color)
     this._label2 = game.labelFactory.create(this._card.symbol, undefined, color)
-    this._label2.font.textAlign = TextAlign.Right
+    this._label2.rotation = Math.PI
+    this._icon1 = game.suitFactory.create(this._card.suit)
+    this._icon2 = game.suitFactory.create(this._card.suit)
+    this._icon2.rotation = Math.PI
+    this._icon1.scale.x = this._icon1.scale.y = 0.6
+    this._icon2.scale.x = this._icon2.scale.y = 0.6
 
     if (!this._card.isFace) {
       this.populateMarkers()
@@ -128,7 +135,11 @@ export class CardGraphic extends Actor {
       this._label1.pos.x = -48
       this._label1.pos.y = -78
       this._label2.pos.x = 48
-      this._label2.pos.y = 64
+      this._label2.pos.y = 76
+      this._icon1.pos.x = -42
+      this._icon1.pos.y = -52
+      this._icon2.pos.x = 42
+      this._icon2.pos.y = 50
 
       const vectors = positions[this._card.value] || []
       vectors.forEach((vector: Vector, index: number) => {
@@ -150,6 +161,8 @@ export class CardGraphic extends Actor {
       this.graphics.use(Resources.CardFront.toSprite())
       if (!this.hasChild(this._label1)) this.addChild(this._label1)
       if (!this.hasChild(this._label2)) this.addChild(this._label2)
+      if (!this.hasChild(this._icon1)) this.addChild(this._icon1)
+      if (!this.hasChild(this._icon2)) this.addChild(this._icon2)
 
       this._suitMarkers.forEach((marker) => {
         if (!this.hasChild(marker)) this.addChild(marker)
@@ -158,6 +171,8 @@ export class CardGraphic extends Actor {
       this.graphics.use(Resources.CardBack.toSprite())
       if (this.hasChild(this._label1)) this.removeChild(this._label1)
       if (this.hasChild(this._label2)) this.removeChild(this._label2)
+      if (this.hasChild(this._icon1)) this.removeChild(this._icon1)
+      if (this.hasChild(this._icon2)) this.removeChild(this._icon2)
       
       this._suitMarkers.forEach((marker) => {
         if (this.hasChild(marker)) this.removeChild(marker)

@@ -7,6 +7,9 @@ import { CardObject } from "../objects/card-object";
 import { CardSide } from "../data/card-side";
 import { EmptyStack } from "../objects/empty-stack";
 import { StackShadow } from "../objects/stack-shadow";
+import { DealMaker } from "../data/deal-maker";
+import { Dealer } from "../data/dealer";
+import { ShowThreeAnchor } from "../objects/show-three-anchor";
 
 const game = GameData.getInstance()
 const width = 128
@@ -14,11 +17,13 @@ const height = 192
 
 export class TableScene extends Scene {
   private deckAnchor = new StraightCardAnchor({ name: 'DeckAnchor', width, height })
-  private displayAnchor = new StraightCardAnchor({ name: 'DisplayAnchor', width, height })
+  private displayAnchor = new ShowThreeAnchor({ name: 'DisplayAnchor', width, height })
   private playAreas: HangingCardAnchor[] = times(7).map((_, index) => new HangingCardAnchor({ name: `PlayArea${index}`, width, height }))
   private targets: HangingCardAnchor[] = times(4).map((_, index) => new StraightCardAnchor({ name: `TargetArea${index}`, width, height }))
   private temporary = new HangingCardAnchor({ name: 'TemporaryStorage', width, height })
   private cards: CardObject[] = []
+  private dealMaker = new DealMaker(this.deckAnchor, this.displayAnchor)
+  private dealer = new Dealer(this.deckAnchor, this.playAreas)
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
@@ -88,10 +93,12 @@ export class TableScene extends Scene {
       })
 
       this.cards.push(card)
-      this.deckAnchor.last.next = card
+      this.deckAnchor.attach(card)
       this.add(card)
       cardData = game.deal()
     }
+
+    this.dealer.deal()
   }
 
   override onDeactivate(context: SceneActivationContext) {

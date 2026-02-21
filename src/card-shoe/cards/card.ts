@@ -123,6 +123,6 @@ export class Card {
   }
 
   toString(): string {
-    return `${ValueSumbols[this._value]} ${SuitSymols[this._suit]}`;
+    return `${ValueSumbols[this._value]} ${SuitSymols[this.suit]}`;
   }
 }

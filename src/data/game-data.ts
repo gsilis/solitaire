@@ -9,6 +9,7 @@ export class GameData {
   labelFactory = new LabelFactory(CARD_FONT)
   suitFactory = new SuitFactory()
   shoe = new Shoe(1)
+  dealCount = 3
 
   private constructor() {}
 
