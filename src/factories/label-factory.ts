@@ -18,6 +18,7 @@ export class LabelFactory {
     if (color) opts['color'] = color
     const label = new Label(opts)
     if (align) label.font.textAlign = align
+    label.font.bold = true
 
     return label
   }

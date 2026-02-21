@@ -17,7 +17,10 @@ export abstract class SuitGraphic extends Actor {
   }
 
   get suitGraphic() {
-    return this.sprite.getSprite(...this.spriteCoordinates)
+    const sprite = this.sprite.getSprite(...this.spriteCoordinates)
+    sprite.width = 36
+    sprite.height = 36
+    return sprite
   }
 
   abstract get spriteCoordinates(): [number, number]

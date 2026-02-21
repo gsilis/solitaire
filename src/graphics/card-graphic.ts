@@ -1,4 +1,4 @@
-import { Actor, ActorArgs, Engine, Label, vec, Vector } from "excalibur";
+import { Actor, ActorArgs, Color, Engine, Label, TextAlign, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
 import { GameData } from "../data/game-data";
@@ -8,86 +8,86 @@ import { ACE, Card, EIGHT, FIVE, FOUR, NINE, SEVEN, SIX, TEN, THREE, TWO, Value 
 const game = GameData.getInstance()
 const positions: Partial<Record<Value, Vector[]>> = {
   [ACE]: [
-    vec(64, 192)
+    vec(0, 0)
   ],
   [TWO]: [
-    vec(64, 64),
-    vec(64, 96)
+    vec(0, -16),
+    vec(0, 16)
   ],
   [THREE]: [
-    vec(48, 48),
-    vec(80, 64),
-    vec(112, 80)
+    vec(-24, -36),
+    vec(0, 0),
+    vec(24, 36)
   ],
   [FOUR]: [
-    vec(48, 48),
-    vec(48, 96),
-    vec(96, 48),
-    vec(96, 48),
+    vec(-24, -36),
+    vec(24, -36),
+    vec(-24, 36),
+    vec(24, 36),
   ],
   [FIVE]: [
-    vec(48, 48),
-    vec(48, 96),
-    vec(96, 48),
-    vec(96, 48),
-    vec(64, 64),
+    vec(-24, -36),
+    vec(24, -36),
+    vec(-24, 36),
+    vec(24, 36),
+    vec(0, 0),
   ],
   [SIX]: [
-    vec(19, 10),
-    vec(20, 20),
-    vec(30, 30),
-    vec(40, 40),
-    vec(50, 50),
-    vec(60, 60),
+    vec(-24, -36),
+    vec(-24, 0),
+    vec(-24, 36),
+    vec(24, -36),
+    vec(24, 0),
+    vec(24, 36),
   ],
   [SEVEN]: [
-    vec(32, 10),
-    vec(32, 20),
-    vec(32, 30),
-    vec(32, 40),
-    vec(32, 50),
-    vec(32, 60),
-    vec(32, 70),
+    vec(-24, -36),
+    vec(-24, 0),
+    vec(-24, 36),
+    vec(24, -36),
+    vec(24, 0),
+    vec(24, 36),
+    vec(0, -16),
   ],
   [EIGHT]: [
-    vec(48, 10),
-    vec(48, 20),
-    vec(48, 30),
-    vec(48, 40),
-    vec(48, 50),
-    vec(48, 60),
-    vec(48, 70),
-    vec(48, 80),
+    vec(-24, -36),
+    vec(-24, 0),
+    vec(-24, 36),
+    vec(24, -36),
+    vec(24, 0),
+    vec(24, 36),
+    vec(0, -16),
+    vec(0, 16),
   ],
   [NINE]: [
-    vec(60, 10),
-    vec(60, 20),
-    vec(60, 30),
-    vec(60, 40),
-    vec(60, 50),
-    vec(60, 60),
-    vec(60, 70),
-    vec(60, 80),
-    vec(60, 90),
+    vec(-24, -36),
+    vec(-24, -12),
+    vec(-24, 12),
+    vec(-24, 36),
+    vec(24, -36),
+    vec(24, -12),
+    vec(24, 12),
+    vec(24, 36),
+    vec(0, -24),
   ],
   [TEN]: [
-    vec(72, 10),
-    vec(72, 20),
-    vec(72, 30),
-    vec(72, 40),
-    vec(72, 50),
-    vec(72, 60),
-    vec(72, 70),
-    vec(72, 80),
-    vec(72, 90),
-    vec(72, 100),
+    vec(-24, -36),
+    vec(-24, -12),
+    vec(-24, 12),
+    vec(-24, 36),
+    vec(24, -36),
+    vec(24, -12),
+    vec(24, 12),
+    vec(24, 36),
+    vec(0, -24),
+    vec(0, 24),
   ],
 }
 
-type CardGraphicOpts = ActorArgs & { card: Card }
+type CardGraphicOpts = ActorArgs & { card: Card, face?: CardSide }
 
 export class CardGraphic extends Actor {
-  private _side: CardSide = CardSide.BACK
+  private _side: CardSide
   private _card: Card
   private _label1: Label
   private _label2: Label
@@ -104,11 +104,15 @@ export class CardGraphic extends Actor {
     this.updateGraphics()
   }
 
-  constructor({ card, ...restOpts }: CardGraphicOpts) {
+  constructor({ card, face, ...restOpts }: CardGraphicOpts) {
     super({ ...restOpts })
+
     this._card = card
-    this._label1 = game.labelFactory.create(this._card.value)
-    this._label2 = game.labelFactory.create(this._card.value)
+    this._side = face || CardSide.BACK
+    const color = this._card.isRed ? Color.Red : Color.Black
+    this._label1 = game.labelFactory.create(this._card.symbol, undefined, color)
+    this._label2 = game.labelFactory.create(this._card.symbol, undefined, color)
+    this._label2.font.textAlign = TextAlign.Right
 
     if (!this._card.isFace) {
       this.populateMarkers()
@@ -121,10 +125,10 @@ export class CardGraphic extends Actor {
     super.onPreUpdate(engine, elapsed)
 
     if (this._side === CardSide.FRONT) {
-      this._label1.pos.x = 32
-      this._label1.pos.y = 32
-      this._label2.pos.x = 96
-      this._label2.pos.y = 96
+      this._label1.pos.x = -48
+      this._label1.pos.y = -78
+      this._label2.pos.x = 48
+      this._label2.pos.y = 64
 
       const vectors = positions[this._card.value] || []
       vectors.forEach((vector: Vector, index: number) => {
@@ -162,7 +166,8 @@ export class CardGraphic extends Actor {
   }
 
   private populateMarkers() {
-    const count = parseInt(this._card.value)
+    const value = this._card.value
+    const count = value === ACE ? 1 : parseInt(value)
 
     if (isNaN(count)) return
 
