@@ -67,8 +67,8 @@ export class TableScene extends Scene {
     })
 
     const position = engine.input.pointers.at(0).lastScreenPos
-    this.temporary.pos.x = position.x + (width / 2) + 16
-    this.temporary.pos.y = position.y + (height / 2) + 16
+    this.temporary.pos.x = position.x
+    this.temporary.pos.y = position.y
   }
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
@@ -90,7 +90,14 @@ export class TableScene extends Scene {
         card: cardData,
         face: CardSide.BACK,
         next: null,
+        width: 128,
+        height: 192,
       })
+
+      card.on('pointerdragstart', this.onPointerDragStart)
+      card.on('pointerdragend', this.onPointerDragEnd)
+      card.on('pointerenter', console.log)
+      card.on('pointerleave', console.log)
 
       this.cards.push(card)
       this.deckAnchor.attach(card)
@@ -115,8 +122,16 @@ export class TableScene extends Scene {
     this.targets.forEach(a => this.remove(a))
   }
 
+  onPointerDragStart = (event: any) => {
+    console.log(event)
+  }
+
+  onPointerDragEnd = (event: any) => {
+    console.log(event)
+  }
+
   private debug() {
     // @ts-ignore
-    window['g'] = { deck: this.deckAnchor, plays: this.playAreas, targets: this.targets, display: this.displayAnchor, cards: this.cards }
+    window['g'] = { deck: this.deckAnchor, plays: this.playAreas, targets: this.targets, display: this.displayAnchor, cards: this.cards, temporary: this.temporary }
   }
 }
