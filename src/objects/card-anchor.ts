@@ -93,7 +93,7 @@ export abstract class CardAnchor extends Actor implements Stackable {
     let count = 0
     while (item) {
       const castAsActor = item as unknown as Actor
-      castAsActor.z = count
+      castAsActor.z = this.z + count
 
       count += 1
       item = item.next

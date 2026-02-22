@@ -114,6 +114,8 @@ export class TableScene extends Scene {
     this.deckAnchor.pos.y = 112
     this.displayAnchor.pos.x = this.deckAnchor.pos.x + 168
     this.displayAnchor.pos.y = this.deckAnchor.pos.y
+    this.deckAnchor.z = 100
+    this.displayAnchor.z = 200
 
     const yTarget = this.deckAnchor.pos.y
     let xTarget = engine.screen.width - padding
@@ -127,10 +129,11 @@ export class TableScene extends Scene {
     const unit = minusPadding / (this.playAreas.length - 1)
     const yPlay = 384
     let xPlay = padding
-    this.playAreas.forEach(play => {
+    this.playAreas.forEach((play, index) => {
       play.pos.x = xPlay
       play.pos.y = yPlay
       xPlay += unit
+      play.z = 500 + (index & 100)
     })
 
     const position = engine.input.pointers.at(0).lastScreenPos
