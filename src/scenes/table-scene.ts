@@ -1,4 +1,4 @@
-import { Engine, Scene, SceneActivationContext } from "excalibur";
+import { Color, Engine, Scene, SceneActivationContext } from "excalibur";
 import { StraightCardAnchor } from "../objects/straight-card-anchor";
 import { GameData } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
@@ -27,6 +27,7 @@ export class TableScene extends Scene {
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
+    this.backgroundColor = Color.fromHex('#146e2d')
 
     this.deckAnchor.addChild(new EmptyStack())
     this.displayAnchor.addChild(new StackShadow())
@@ -41,39 +42,13 @@ export class TableScene extends Scene {
   override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed)
 
-    const stageWidth = engine.screen.width
-    const padding = 96
-    this.deckAnchor.pos.x = 96
-    this.deckAnchor.pos.y = 112
-    this.displayAnchor.pos.x = this.deckAnchor.pos.x + 168
-    this.displayAnchor.pos.y = this.deckAnchor.pos.y
-
-    const yTarget = this.deckAnchor.pos.y
-    let xTarget = engine.screen.width - padding
-    this.targets.forEach(target => {
-      target.pos.x = xTarget
-      target.pos.y = yTarget
-      xTarget -= 168
-    })
-
-    const minusPadding = stageWidth - (padding * 2)
-    const unit = minusPadding / (this.playAreas.length - 1)
-    const yPlay = 384
-    let xPlay = padding
-    this.playAreas.forEach(play => {
-      play.pos.x = xPlay
-      play.pos.y = yPlay
-      xPlay += unit
-    })
-
-    const position = engine.input.pointers.at(0).lastScreenPos
-    this.temporary.pos.x = position.x
-    this.temporary.pos.y = position.y
+    this.positionAssets(engine)
   }
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
     super.onActivate(context)
 
+    this.positionAssets(context.engine)
     this.debug()
 
     this.add(this.deckAnchor)
@@ -92,12 +67,14 @@ export class TableScene extends Scene {
         next: null,
         width: 128,
         height: 192,
+        x: this.deckAnchor.pos.x,
+        y: this.deckAnchor.pos.y,
       })
 
-      card.on('pointerdragstart', this.onPointerDragStart)
-      card.on('pointerdragend', this.onPointerDragEnd)
-      card.on('pointerenter', console.log)
-      card.on('pointerleave', console.log)
+      card.on('pointerdragstart', () => {})
+      card.on('pointerdragend', () => {})
+      card.on('pointerenter', () => {})
+      card.on('pointerleave', () => {})
 
       this.cards.push(card)
       this.deckAnchor.attach(card)
@@ -128,6 +105,37 @@ export class TableScene extends Scene {
 
   onPointerDragEnd = (event: any) => {
     console.log(event)
+  }
+
+  private positionAssets(engine: Engine) {
+    const stageWidth = engine.screen.width
+    const padding = 96
+    this.deckAnchor.pos.x = 96
+    this.deckAnchor.pos.y = 112
+    this.displayAnchor.pos.x = this.deckAnchor.pos.x + 168
+    this.displayAnchor.pos.y = this.deckAnchor.pos.y
+
+    const yTarget = this.deckAnchor.pos.y
+    let xTarget = engine.screen.width - padding
+    this.targets.forEach(target => {
+      target.pos.x = xTarget
+      target.pos.y = yTarget
+      xTarget -= 168
+    })
+
+    const minusPadding = stageWidth - (padding * 2)
+    const unit = minusPadding / (this.playAreas.length - 1)
+    const yPlay = 384
+    let xPlay = padding
+    this.playAreas.forEach(play => {
+      play.pos.x = xPlay
+      play.pos.y = yPlay
+      xPlay += unit
+    })
+
+    const position = engine.input.pointers.at(0).lastScreenPos
+    this.temporary.pos.x = position.x
+    this.temporary.pos.y = position.y
   }
 
   private debug() {

@@ -1,4 +1,5 @@
 import { CardAnchor } from "../objects/card-anchor";
+import { times } from "../utils/times";
 
 export class Dealer {
   private deck: CardAnchor
@@ -11,16 +12,32 @@ export class Dealer {
 
   deal() {
     const targets = [...this.slots]
+    const targetSequence: CardAnchor[] = []
+
+    while (targets.length > 0) {
+      targets.forEach(t => targetSequence.push(t))
+      targets.shift()
+    }
+
+    times(28).forEach((_, index) => {
+      const delay = 100 * index
+      
+      setTimeout(() => {
+        const card = this.deck.detach(1)[0]
+        const target = targetSequence.pop()
+
+        if (target) target.attach(card)
+      }, delay)
+    })
+
+    setTimeout(() => {
+      this.slots.forEach(s => s.flipLast())
+    }, 2800)
 
     while (targets.length > 0) {
       targets.forEach((target) => {
         const card = this.deck.detach(1)[0]
-        const lastCard = target.lastCard
-        if (lastCard) {
-          lastCard.next = card
-        } else {
-          target.next = card
-        }
+        target.attach(card)
       })
 
       targets.shift()

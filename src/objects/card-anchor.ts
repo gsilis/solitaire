@@ -1,4 +1,4 @@
-import { Actor, Engine, vec } from "excalibur";
+import { Actor, easeInOutCubic, Engine, vec } from "excalibur";
 import { Stackable } from "./interfaces/stackable";
 import { times } from "../utils/times";
 import { CardObject } from "./card-object";
@@ -52,11 +52,23 @@ export abstract class CardAnchor extends Actor implements Stackable {
     stackable.next = null
 
     const last = this.lastCard
+    const length = this.tree().length
     if (last) {
       last.next = stackable
     } else {
       this.next = stackable
     }
+
+    const stackableActor = stackable as unknown as CardObject
+    stackableActor.actions.clearActions()
+    stackableActor.actions.moveTo({
+      pos: vec(
+        this.pos.x + this.xPositionFor(length),
+        this.pos.y + this.yPositionFor(length)
+      ),
+      duration: 300,
+      easing: easeInOutCubic
+    })
   }
 
   detach(count: number = 1): Stackable[] {
@@ -81,11 +93,6 @@ export abstract class CardAnchor extends Actor implements Stackable {
     let count = 0
     while (item) {
       const castAsActor = item as unknown as Actor
-      const newPosition = vec(
-        this.pos.x + this.xPositionFor(count),
-        this.pos.y + this.yPositionFor(count)
-      )
-      castAsActor.pos = newPosition
       castAsActor.z = count
 
       count += 1
