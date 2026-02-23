@@ -24,7 +24,7 @@ export class Dealer {
       
       setTimeout(() => {
         const card = this.deck.detach(1)[0]
-        const target = targetSequence.pop()
+        const target = targetSequence.shift()
 
         if (target) target.attach(card)
       }, delay)
