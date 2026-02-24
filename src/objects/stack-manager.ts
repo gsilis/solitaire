@@ -60,7 +60,19 @@ export class StackManager {
 
       this.updateStackEnabled()
     } else if (this.startingStack) {
-      this.sendTreeToStack(this.startingStack)
+      const wouldAccept = this.targetedCard && this.acceptableTargetForCard(this.targetedCard)
+
+      if (wouldAccept && !this.targetedCard?.next) {
+        this.sendTreeToStack(wouldAccept)
+        const lastCard = this.startingStack?.lastCard as CardObject
+        if (lastCard?.isHidden) {
+          lastCard.flip()
+        }
+
+        this.updateStackEnabled()
+      } else {
+        this.sendTreeToStack(this.startingStack)
+      }
     }
   }
 
@@ -87,6 +99,7 @@ export class StackManager {
 
       if (!card.next && wouldAccept) {
         this.sendTreeToStack(wouldAccept)
+        this.updateStackEnabled()
       } else if (this.startingStack) {
         this.sendTreeToStack(this.startingStack)
       }
