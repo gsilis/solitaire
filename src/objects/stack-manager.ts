@@ -41,7 +41,13 @@ export class StackManager {
       this.orphanedStackTimeout = null
     }
 
-    this.sendTreeToStack(stack)
+    const firstCardInStack = this.temporaryStack.firstCard as CardObject
+
+    if (stack.acceptCard(firstCardInStack)) {
+      this.sendTreeToStack(stack)
+    } else if (this.startingStack) {
+      this.sendTreeToStack(this.startingStack)
+    }
   }
 
   private onCardInteractionStart = (card: CardObject, event: PointerEvent) => {

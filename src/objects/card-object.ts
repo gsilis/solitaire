@@ -1,5 +1,5 @@
 import { Actor, ActorArgs, Engine } from "excalibur";
-import { Card } from "../card-shoe/cards/card";
+import { Card, Suit, Value } from "../card-shoe/cards/card";
 import { CardGraphic } from "../graphics/card-graphic";
 import { CardSide } from "../data/card-side";
 import { Stackable } from "./interfaces/stackable";
@@ -43,6 +43,17 @@ export class CardObject extends Actor implements Stackable {
   get next(): Stackable | null {
     return this._next
   }
+
+  get value(): Value {
+    return this._card.value
+  }
+
+  get suit(): Suit {
+    return this._card.suit
+  }
+
+  get isRed() { return this._card.isRed }
+  get isBlack() { return this._card.isBlack }
 
   set next(stackable: Stackable | null) {
     this._next = stackable

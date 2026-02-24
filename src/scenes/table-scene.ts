@@ -12,6 +12,8 @@ import { Dealer } from "../data/dealer";
 import { ShowThreeAnchor } from "../objects/show-three-anchor";
 import { StackManager } from "../objects/stack-manager";
 import { FlipCardManager } from "../objects/flip-card-manager";
+import { CountUpStrategy } from "../objects/count-up-strategy";
+import { AlternatingColorStrategy } from "../objects/alternating-color-strategy";
 
 const game = GameData.getInstance()
 const width = 128
@@ -39,6 +41,8 @@ export class TableScene extends Scene {
   private dealer = new Dealer(this.deckAnchor, this.playAreas)
   private stackManager?: StackManager
   private flipCardManager?: FlipCardManager
+  private countUpStrategy = new CountUpStrategy()
+  private alternatingColorStrategy = new AlternatingColorStrategy()
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
@@ -55,10 +59,12 @@ export class TableScene extends Scene {
     this.deckAnchor.addChild(new EmptyStack({ z: INDICES.EMPTY_DECK, name: 'shadow' }))
     this.displayAnchor.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
     this.playAreas.forEach((play) => {
+      play.cardStrategy = this.alternatingColorStrategy
       play.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
       stackManager.addStack(play)
     })
     this.targets.forEach((target) => {
+      target.cardStrategy = this.countUpStrategy
       target.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
       stackManager.addStack(target)
     })

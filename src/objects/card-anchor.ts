@@ -2,13 +2,24 @@ import { Actor, easeInOutCubic, Engine, vec } from "excalibur";
 import { Stackable } from "./interfaces/stackable";
 import { times } from "../utils/times";
 import { CardObject } from "./card-object";
+import { AcceptCardStrategy } from "./accept-card-strategy";
+import { NullCardStrategy } from "./null-card-strategy";
 
 export abstract class CardAnchor extends Actor implements Stackable {
   private _next: Stackable | null = null
   private _forceCardUpdate: boolean = false
+  private _acceptCardStrategy: AcceptCardStrategy = new NullCardStrategy()
 
   previous(): Stackable {
     return this
+  }
+
+  acceptCard(card: CardObject) {
+    return this._acceptCardStrategy.acceptCard(this.tree() as CardObject[], card)
+  }
+
+  set cardStrategy(strategy: AcceptCardStrategy) {
+    this._acceptCardStrategy = strategy
   }
 
   get forceCards() {
