@@ -1,6 +1,6 @@
 import { CardAnchor } from "./card-anchor";
 
-export class StraightCardAnchor extends CardAnchor {
+export class StraightDownCardAnchor extends CardAnchor {
   xPositionFor(index: number): number {
     const modified = Math.floor(index / 10)
     return modified * 1

@@ -9,6 +9,8 @@ export abstract class CardAnchor extends Actor implements Stackable {
   private _next: Stackable | null = null
   private _forceCardUpdate: boolean = false
   private _acceptCardStrategy: AcceptCardStrategy = new NullCardStrategy()
+  private _mouseEvents: boolean = true
+  private _enableIfBlank?: CardAnchor
 
   previous(): Stackable {
     return this
@@ -47,6 +49,22 @@ export abstract class CardAnchor extends Actor implements Stackable {
     const card = tree.shift()
 
     return card === undefined ? null : card
+  }
+
+  get enabledIfBlank() {
+    return this._enableIfBlank
+  }
+
+  set enabledIfBlank(cardAnchor: CardAnchor | undefined) {
+    this._enableIfBlank = cardAnchor
+  }
+
+  get mouseEvents(): boolean {
+    return this._mouseEvents
+  }
+
+  set mouseEvents(value: boolean) {
+    this._mouseEvents = value
   }
 
   flipLast() {

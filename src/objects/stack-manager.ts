@@ -28,6 +28,8 @@ export class StackManager {
   }
 
   private onStackInteractionStart = (stack: CardAnchor,  event: PointerEvent) => {
+    if (!stack.mouseEvents) return
+
     this.isDown = true
     this.startingStack = stack
     this.targetedCard = null
@@ -45,6 +47,13 @@ export class StackManager {
 
     if (stack.acceptCard(firstCardInStack)) {
       this.sendTreeToStack(stack)
+
+      const lastCard = this.startingStack?.lastCard as CardObject
+      if (lastCard?.isHidden) {
+        lastCard.flip()
+      }
+
+      this.updateStackEnabled()
     } else if (this.startingStack) {
       this.sendTreeToStack(this.startingStack)
     }
@@ -91,6 +100,14 @@ export class StackManager {
 
     detachedCards.forEach((card) => {
       stack.attach(card)
+    })
+  }
+
+  private updateStackEnabled() {
+    this.stacks.forEach((stack) => {
+      if (stack.enabledIfBlank) {
+        stack.mouseEvents = !stack.enabledIfBlank.lastCard
+      }
     })
   }
 }
