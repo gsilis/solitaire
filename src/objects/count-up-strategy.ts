@@ -12,9 +12,9 @@ export class CountUpStrategy implements AcceptCardStrategy {
     const nextCardIndex = ACCEPTS.indexOf(lastCard?.value || '') + 1
     const nextCardValue = ACCEPTS[nextCardIndex]
 
-    if (!lastCard && card.value === ACE) {
+    if (!lastCard && card?.value === ACE) {
       return true
-    } else if (lastCard?.suit === card.suit && card.value === nextCardValue) {
+    } else if (lastCard?.suit === card?.suit && card?.value === nextCardValue) {
       return true
     } else {
       return false

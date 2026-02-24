@@ -9,7 +9,7 @@ const ACCEPT = [
 export class AlternatingColorStrategy implements AcceptCardStrategy {
   acceptCard(tree: CardObject[], card: CardObject): boolean {
     const lastCard = [...tree].pop() as CardObject
-    const lastCardIndex = ACCEPT.indexOf(lastCard.value || '')
+    const lastCardIndex = ACCEPT.indexOf(lastCard?.value || '')
     const nextCardValue = ACCEPT[lastCardIndex + 1]
     const differentColors = lastCard?.isRed !== card?.isRed
 
