@@ -20,7 +20,7 @@ export class Dealer {
     }
 
     times(28).forEach((_, index) => {
-      const delay = 100 * index
+      const delay = 70 * index
       
       setTimeout(() => {
         const card = this.deck.detach(1)[0]
@@ -31,8 +31,12 @@ export class Dealer {
     })
 
     setTimeout(() => {
-      this.slots.forEach(s => s.flipLast())
-    }, 2800)
+      this.slots.forEach((slot, index) => {
+        setTimeout(() => {
+          slot.flipLast()
+        }, 50 * index)
+      })
+    }, 1800)
 
     while (targets.length > 0) {
       targets.forEach((target) => {

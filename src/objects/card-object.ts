@@ -19,6 +19,7 @@ export class CardObject extends Actor implements Stackable {
     this._next = args.next
     this._card = card
     this._graphics = new CardGraphic({ card, face })
+    this.collider.useBoxCollider(110, 176)
   }
 
   override onAdd(engine: Engine): void {

@@ -1,4 +1,4 @@
-import { Color, Engine, Scene, SceneActivationContext } from "excalibur";
+import { Actor, Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
 import { StraightCardAnchor } from "../objects/straight-card-anchor";
 import { GameData } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
@@ -10,33 +10,56 @@ import { StackShadow } from "../objects/stack-shadow";
 import { DealMaker } from "../data/deal-maker";
 import { Dealer } from "../data/dealer";
 import { ShowThreeAnchor } from "../objects/show-three-anchor";
+import { StackManager } from "../objects/stack-manager";
 
 const game = GameData.getInstance()
 const width = 128
 const height = 192
+
+const INDICES = {
+  CATCHALL: 0,
+  EMPTY_DECK: -100,
+  DECK: 10,
+  PILE_SHADOW: -100,
+  PILE: 20,
+
+  TARGETS: [200, 400, 600, 800],
+  PLAYS: [1000, 1200, 1400, 1600, 1800, 2000, 2200],
+  FLOATING: 2400,
+}
 
 export class TableScene extends Scene {
   private deckAnchor = new StraightCardAnchor({ name: 'DeckAnchor', width, height })
   private displayAnchor = new ShowThreeAnchor({ name: 'DisplayAnchor', width, height })
   private playAreas: HangingCardAnchor[] = times(7).map((_, index) => new HangingCardAnchor({ name: `PlayArea${index}`, width, height }))
   private targets: HangingCardAnchor[] = times(4).map((_, index) => new StraightCardAnchor({ name: `TargetArea${index}`, width, height }))
-  private temporary = new HangingCardAnchor({ name: 'TemporaryStorage', width, height })
+  private temporary = new HangingCardAnchor({ name: 'TemporaryStorage', width, height, z: INDICES.FLOATING })
   private cards: CardObject[] = []
-  private dealMaker = new DealMaker(this.deckAnchor, this.displayAnchor)
   private dealer = new Dealer(this.deckAnchor, this.playAreas)
+  private stackManager?: StackManager
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
     this.backgroundColor = Color.fromHex('#146e2d')
+    const stackManager = new StackManager(this.temporary)
+    stackManager.addStack(this.deckAnchor)
+    stackManager.addStack(this.displayAnchor)
+    this.temporary.forceCards = true
 
-    this.deckAnchor.addChild(new EmptyStack())
-    this.displayAnchor.addChild(new StackShadow())
-    this.playAreas.forEach(play => {
-      play.addChild(new StackShadow())
+    new DealMaker(this.deckAnchor, this.displayAnchor)
+
+    this.deckAnchor.addChild(new EmptyStack({ z: INDICES.EMPTY_DECK, name: 'shadow' }))
+    this.displayAnchor.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
+    this.playAreas.forEach((play) => {
+      play.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
+      stackManager.addStack(play)
     })
-    this.targets.forEach(target => {
-      target.addChild(new StackShadow())
+    this.targets.forEach((target) => {
+      target.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
+      stackManager.addStack(target)
     })
+
+    this.stackManager = stackManager
   }
 
   override onPreUpdate(engine: Engine, elapsed: number): void {
@@ -71,13 +94,9 @@ export class TableScene extends Scene {
         y: this.deckAnchor.pos.y,
       })
 
-      card.on('pointerdragstart', () => {})
-      card.on('pointerdragend', () => {})
-      card.on('pointerenter', () => {})
-      card.on('pointerleave', () => {})
-
       this.cards.push(card)
       this.deckAnchor.attach(card)
+      this.stackManager?.addCard(card)
       this.add(card)
       cardData = game.deal()
     }
@@ -99,14 +118,6 @@ export class TableScene extends Scene {
     this.targets.forEach(a => this.remove(a))
   }
 
-  onPointerDragStart = (event: any) => {
-    console.log(event)
-  }
-
-  onPointerDragEnd = (event: any) => {
-    console.log(event)
-  }
-
   private positionAssets(engine: Engine) {
     const stageWidth = engine.screen.width
     const padding = 96
@@ -114,14 +125,15 @@ export class TableScene extends Scene {
     this.deckAnchor.pos.y = 112
     this.displayAnchor.pos.x = this.deckAnchor.pos.x + 168
     this.displayAnchor.pos.y = this.deckAnchor.pos.y
-    this.deckAnchor.z = 100
-    this.displayAnchor.z = 200
+    this.deckAnchor.z = INDICES.DECK
+    this.displayAnchor.z = INDICES.PILE
 
     const yTarget = this.deckAnchor.pos.y
     let xTarget = engine.screen.width - padding
-    this.targets.forEach(target => {
+    this.targets.forEach((target, index) => {
       target.pos.x = xTarget
       target.pos.y = yTarget
+      target.z = INDICES.TARGETS[index]
       xTarget -= 168
     })
 
@@ -132,8 +144,8 @@ export class TableScene extends Scene {
     this.playAreas.forEach((play, index) => {
       play.pos.x = xPlay
       play.pos.y = yPlay
+      play.z = INDICES.PLAYS[index]
       xPlay += unit
-      play.z = 500 + (index & 100)
     })
 
     const position = engine.input.pointers.at(0).lastScreenPos

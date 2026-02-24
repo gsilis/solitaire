@@ -5,9 +5,18 @@ import { CardObject } from "./card-object";
 
 export abstract class CardAnchor extends Actor implements Stackable {
   private _next: Stackable | null = null
+  private _forceCardUpdate: boolean = false
 
   previous(): Stackable {
     return this
+  }
+
+  get forceCards() {
+    return this._forceCardUpdate
+  }
+
+  set forceCards(mode: boolean) {
+    this._forceCardUpdate = mode
   }
 
   get next(): Stackable | null {
@@ -60,15 +69,21 @@ export abstract class CardAnchor extends Actor implements Stackable {
     }
 
     const stackableActor = stackable as unknown as CardObject
-    stackableActor.actions.clearActions()
-    stackableActor.actions.moveTo({
-      pos: vec(
-        this.pos.x + this.xPositionFor(length),
-        this.pos.y + this.yPositionFor(length)
-      ),
-      duration: 300,
-      easing: easeInOutCubic
-    })
+    const pos = vec(
+      this.pos.x + this.xPositionFor(length),
+      this.pos.y + this.yPositionFor(length)
+    )
+    if (this._forceCardUpdate) {
+      stackableActor.pos = pos
+    } else {
+      stackableActor.actions.clearActions()
+      stackableActor.actions.moveTo({
+        pos,
+        duration: 300,
+        easing: easeInOutCubic
+      })
+    }
+    this.redoBounds(length + 1)
   }
 
   detach(count: number = 1): Stackable[] {
@@ -76,12 +91,20 @@ export abstract class CardAnchor extends Actor implements Stackable {
     const lastInStack = cards[0]
 
     if (cards.length > count) { cards.shift() }
+    const firstCard = cards[0]
 
-    if (lastInStack && lastInStack !== this.next) {
+    if (lastInStack && lastInStack !== firstCard) {
       lastInStack.next = null
     } else {
       this.next = null
     }
+
+    const report = cards.map(card => {
+      const castCard = card as unknown as CardObject
+      const nextCard = card.next as unknown as CardObject
+      return [castCard?.toString(), nextCard?.toString()].toString()
+    })
+    console.log(report)
 
     return cards
   }
@@ -93,13 +116,30 @@ export abstract class CardAnchor extends Actor implements Stackable {
     let count = 0
     while (item) {
       const castAsActor = item as unknown as Actor
-      castAsActor.z = this.z + count
+      castAsActor.z = this.z - 90 + count
+
+      if (this._forceCardUpdate) {
+        castAsActor.pos.x = this.pos.x + this.xPositionFor(count)
+        castAsActor.pos.y = this.pos.y + this.yPositionFor(count)
+      }
 
       count += 1
       item = item.next
     }
   }
 
+  override onInitialize(engine: Engine): void {
+    super.onInitialize(engine)
+  }
+
   abstract yPositionFor(index: number): number
   abstract xPositionFor(index: number): number
+
+  private redoBounds(cardCount: number) {
+    const lastCardHeight = this.yPositionFor(cardCount - 1)
+    const colliderHeight = lastCardHeight + 192
+    const center = vec(0, (colliderHeight / 2) - 96)
+
+    this.collider.useBoxCollider(128, colliderHeight, undefined, center)
+  }
 }
