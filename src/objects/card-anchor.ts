@@ -99,13 +99,6 @@ export abstract class CardAnchor extends Actor implements Stackable {
       this.next = null
     }
 
-    const report = cards.map(card => {
-      const castCard = card as unknown as CardObject
-      const nextCard = card.next as unknown as CardObject
-      return [castCard?.toString(), nextCard?.toString()].toString()
-    })
-    console.log(report)
-
     return cards
   }
 

@@ -11,6 +11,7 @@ import { DealMaker } from "../data/deal-maker";
 import { Dealer } from "../data/dealer";
 import { ShowThreeAnchor } from "../objects/show-three-anchor";
 import { StackManager } from "../objects/stack-manager";
+import { FlipCardManager } from "../objects/flip-card-manager";
 
 const game = GameData.getInstance()
 const width = 128
@@ -37,10 +38,13 @@ export class TableScene extends Scene {
   private cards: CardObject[] = []
   private dealer = new Dealer(this.deckAnchor, this.playAreas)
   private stackManager?: StackManager
+  private flipCardManager?: FlipCardManager
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
     this.backgroundColor = Color.fromHex('#146e2d')
+
+    const flipCardManager = new FlipCardManager()
     const stackManager = new StackManager(this.temporary)
     stackManager.addStack(this.deckAnchor)
     stackManager.addStack(this.displayAnchor)
@@ -60,6 +64,7 @@ export class TableScene extends Scene {
     })
 
     this.stackManager = stackManager
+    this.flipCardManager = flipCardManager
   }
 
   override onPreUpdate(engine: Engine, elapsed: number): void {
@@ -96,6 +101,7 @@ export class TableScene extends Scene {
 
       this.cards.push(card)
       this.deckAnchor.attach(card)
+      this.flipCardManager?.addCard(card)
       this.stackManager?.addCard(card)
       this.add(card)
       cardData = game.deal()

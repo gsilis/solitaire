@@ -47,7 +47,9 @@ export class StackManager {
   private onCardInteractionStart = (card: CardObject, event: PointerEvent) => {
     // All cards under the pointer will be reported here
     // Excalibur appears to process these based on z-index?
-    if (this.isDown && !this.targetedCard) {
+    const isHidden = card.isHidden
+
+    if (this.isDown && !this.targetedCard && !isHidden) {
       this.targetedCard = card
 
       this.dragCardTree()

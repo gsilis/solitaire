@@ -22,6 +22,10 @@ export class CardObject extends Actor implements Stackable {
     this.collider.useBoxCollider(110, 176)
   }
 
+  get isHidden() {
+    return this._graphics.side === CardSide.BACK
+  }
+
   override onAdd(engine: Engine): void {
     super.onAdd(engine)
     this.addChild(this._graphics)
