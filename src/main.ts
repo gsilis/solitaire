@@ -6,9 +6,9 @@ import { TableScene } from "./scenes/table-scene"
 // Goal is to keep main.ts small and just enough to configure the engine
 
 const game = new Engine({
-  width: 1200, // Logical width and height in game pixels
-  height: 1000,
-  displayMode: DisplayMode.Fixed, // Display mode tells excalibur how to fill the window
+  width: 1280, // Logical width and height in game pixels
+  height: 960,
+  displayMode: DisplayMode.FillScreen, // Display mode tells excalibur how to fill the window
   pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
   scenes: {
     table: TableScene,
