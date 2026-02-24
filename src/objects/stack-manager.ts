@@ -107,7 +107,7 @@ export class StackManager {
       this.orphanedStackTimeout = null
       this.startingStack = null
       this.targetedCard = null
-    }, 100)
+    }, 70)
   }
 
   private dragCardTree = () => {
