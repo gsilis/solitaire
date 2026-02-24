@@ -1,4 +1,4 @@
-import { PointerEvent } from "excalibur";
+import { PointerButton, PointerEvent } from "excalibur";
 import { CardAnchor } from "./card-anchor";
 import { CardObject } from "./card-object";
 
@@ -9,6 +9,7 @@ export class StackManager {
   private isDown: boolean = false
   private targetedCard: CardObject | null = null
   private startingStack: CardAnchor | null = null
+  private targetStacks: CardAnchor[] = []
   private orphanedStackTimeout: ReturnType<typeof setTimeout> | null = null
 
   constructor(temporaryStack: CardAnchor) {
@@ -19,6 +20,10 @@ export class StackManager {
     this.stacks.push(stack)
     stack.on('pointerdown', (event) => this.onStackInteractionStart(stack, event))
     stack.on('pointerup', (event) => this.onStackInteractionEnd(stack, event))
+  }
+
+  addTargetStack(stack: CardAnchor) {
+    this.targetStacks.push(stack)
   }
 
   addCard(card: CardObject) {
@@ -67,7 +72,9 @@ export class StackManager {
     if (this.isDown && !this.targetedCard && !isHidden) {
       this.targetedCard = card
 
-      this.dragCardTree()
+      if (event.button === PointerButton.Left) {
+        this.dragCardTree()
+      }
     }
   }
 
@@ -76,7 +83,14 @@ export class StackManager {
 
     this.orphanedStackTimeout = setTimeout(() => {
       // If this runs, then no pointerup event triggered on another stack
-      if (this.startingStack) this.sendTreeToStack(this.startingStack)
+      const wouldAccept = this.acceptableTargetForCard(card)
+
+      if (!card.next && wouldAccept) {
+        this.sendTreeToStack(wouldAccept)
+      } else if (this.startingStack) {
+        this.sendTreeToStack(this.startingStack)
+      }
+      
       this.orphanedStackTimeout = null
       this.startingStack = null
       this.targetedCard = null
@@ -109,5 +123,16 @@ export class StackManager {
         stack.mouseEvents = !stack.enabledIfBlank.lastCard
       }
     })
+  }
+
+  private acceptableTargetForCard(card: CardObject): CardAnchor | undefined {
+    let anchor: CardAnchor | undefined = undefined
+    this.targetStacks.forEach((stack: CardAnchor) => {
+      if (stack.acceptCard(card)) {
+        anchor = stack
+      }
+    })
+
+    return anchor
   }
 }

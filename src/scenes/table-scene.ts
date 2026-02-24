@@ -71,6 +71,7 @@ export class TableScene extends Scene {
       target.cardStrategy = this.countUpStrategy
       target.addChild(new StackShadow({ z: INDICES.PILE_SHADOW, name: 'shadow' }))
       stackManager.addStack(target)
+      stackManager.addTargetStack(target)
     })
 
     this.stackManager = stackManager
