@@ -1,4 +1,4 @@
-import { Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
+import { Color, Engine, Scene, SceneActivationContext, TextAlign, vec } from "excalibur";
 import { StraightDownCardAnchor } from "../objects/straight-down-card-anchor";
 import { GameData } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
@@ -14,6 +14,7 @@ import { CountUpStrategy } from "../objects/count-up-strategy";
 import { AlternatingColorStrategy } from "../objects/alternating-color-strategy";
 import { SingleCardAnchor } from "../objects/single-card-anchor";
 import { StraightHorizontalCardAnchor } from "../objects/straight-horizontal-card-anchor";
+import { Card } from "../card-shoe/cards/card";
 
 const game = GameData.getInstance()
 const width = 128
@@ -46,6 +47,10 @@ export class TableScene extends Scene {
   private stackManager?: StackManager
   private countUpStrategy = new CountUpStrategy()
   private alternatingColorStrategy = new AlternatingColorStrategy()
+  private menuButton = game.controlFactory.create('MENU', TextAlign.Left, Color.White)
+  private dealAgainButton = game.controlFactory.create('NEW GAME', TextAlign.Left, Color.White)
+  private restartButton = game.controlFactory.create('RESTART', TextAlign.Left, Color.White)
+  private originalCardOrder: Card[] = []
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
@@ -94,14 +99,47 @@ export class TableScene extends Scene {
     this.add(this.displayAnchor2)
     this.add(this.displayAnchor3)
     this.add(this.temporary)
+    this.add(this.menuButton)
+    this.add(this.dealAgainButton)
+    this.add(this.restartButton)
+    this.menuButton.on('pointerup', this.onMenuClick)
+    this.dealAgainButton.on('pointerup', this.onDealAgainClick)
+    this.restartButton.on('pointerup', this.onRestartClick)
     this.playAreas.forEach(a => this.add(a))
     this.targets.forEach(a => this.add(a))
 
     this.displayAnchor.enabledIfBlank = this.displayAnchor2
     this.displayAnchor2.enabledIfBlank = this.displayAnchor3
 
+    this.dealCards()
+    this.dealer.deal()
+  }
+
+  override onDeactivate(context: SceneActivationContext) {
+    super.onDeactivate(context)
+
+    this.cards.forEach((card) => {
+      this.contains(card) && this.remove(card)
+    })
+    this.cards = []
+    this.remove(this.deckAnchor)
+    this.remove(this.displayAnchor)
+    this.remove(this.temporary)
+    this.remove(this.menuButton)
+    this.remove(this.dealAgainButton)
+    this.remove(this.restartButton)
+    this.menuButton.off('pointerup', this.onMenuClick)
+    this.dealAgainButton.off('pointerup', this.onDealAgainClick)
+    this.restartButton.off('pointerup', this.onRestartClick)
+    this.playAreas.forEach(a => this.remove(a))
+    this.targets.forEach(a => this.remove(a))
+  }
+
+  private dealCards() {
     game.shuffle()
+    this.originalCardOrder = game.shoe.currentOrder()
     let cardData = game.deal()
+
     while (cardData) {
       const card = new CardObject({
         name: `Card_${cardData.symbol}${cardData.suitGlyph}`,
@@ -120,26 +158,11 @@ export class TableScene extends Scene {
       this.add(card)
       cardData = game.deal()
     }
-
-    this.dealer.deal()
-  }
-
-  override onDeactivate(context: SceneActivationContext) {
-    super.onDeactivate(context)
-
-    this.cards.forEach((card) => {
-      this.contains(card) && this.remove(card)
-    })
-    this.cards = []
-    this.remove(this.deckAnchor)
-    this.remove(this.displayAnchor)
-    this.remove(this.temporary)
-    this.playAreas.forEach(a => this.remove(a))
-    this.targets.forEach(a => this.remove(a))
   }
 
   private positionAssets(engine: Engine) {
     const stageWidth = engine.screen.width
+    const stageHeight = engine.screen.height
     const padding = 96
     this.deckAnchor.pos.x = 96
     this.deckAnchor.pos.y = 112
@@ -175,10 +198,27 @@ export class TableScene extends Scene {
     const position = engine.input.pointers.at(0).lastScreenPos
     this.temporary.pos.x = position.x
     this.temporary.pos.y = position.y
+
+    this.menuButton.pos = vec(10, stageHeight - 40)
+    this.restartButton.pos = vec(this.menuButton.pos.x + 100, stageHeight - 40)
+    this.dealAgainButton.pos = vec(this.restartButton.pos.x + 120, stageHeight - 40)
   }
 
   private debug() {
     // @ts-ignore
     window['g'] = { deck: this.deckAnchor, plays: this.playAreas, targets: this.targets, display: this.displayAnchor, cards: this.cards, temporary: this.temporary }
+  }
+
+  private onMenuClick = () => {
+    this.engine.goToScene('menu')
+  }
+
+  private onDealAgainClick = () => {
+    game.shuffle()
+    this.dealCards()
+  }
+
+  private onRestartClick = () => {
+
   }
 }

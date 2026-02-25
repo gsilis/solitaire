@@ -52,6 +52,14 @@ export class Shoe {
     return this._cards.pop();
   }
 
+  currentOrder(): Card[] {
+    return [...this._cards]
+  }
+
+  acceptSnapshot(cards: Card[]) {
+    this._cards = cards
+  }
+
   private fill() {
     this._shuffled = false;
     this._cards = fill(this.decks).reduce((cards: Card[]) => {
