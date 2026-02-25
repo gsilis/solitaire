@@ -5,15 +5,34 @@
     <link rel="icon" href="favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/style.css">
-    <title>Excalibur + Vite</title>
+    <title>Solitaire</title>
   </head>
   <body>
     <script type="module" src="./src/main.ts"></script>
-    <div class="game-block">
-      <div class="container">
+    <div class="game-block w-screen h-screen relative">
+      <div class="container absolute w-screen h-screen">
         <canvas id="game-canvas"></canvas>
       </div>
-      <div class="ui"></div>
+      <div class="ui absolute bottom-0" x-data="$store.game">
+        <div x-show="isMainMenu" id="main_menu" class="w-screen h-screen flex flex-col items-center justify-center">
+          <h1 class="title mb-10">SOLITAIRE</h1>
+          <button id="play-game" class="button">PLAY</button>
+          <hr class="mb-15" />
+          <div class="flex flex-row gap-6 radio-group">
+            <label class="flex justify-center" x-bind:class="{'selected': dealCount === 1}">
+              <input type="radio" name="deal-count" value="1" x-model="dealCount" @click="dealOne" />
+              <span>Deal One</span>
+            </label>
+            <label class="flex justify-center" x-bind:class="{'selected': dealCount === 3}">
+              <input type="radio" name="deal-count" value="3" x-model="dealCount" @click="dealThree" />
+              <span>Deal Three</span>
+            </label>
+          </div>
+        </div>
+        <div x-show="isPlaying" id="playing" class="w-full flex flex-row items-end absolute bottom-0">
+          <button id="quit-button" class="button m-3">Quit</button>
+        </div>
+      </div>
     </div>
   </body>
 </html>

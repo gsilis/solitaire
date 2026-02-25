@@ -1,6 +1,6 @@
 import { Color, Engine, Scene, SceneActivationContext, TextAlign, vec } from "excalibur";
 import { StraightDownCardAnchor } from "../objects/straight-down-card-anchor";
-import { GameData } from "../data/game-data";
+import { GameData, State } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
 import { times } from "../utils/times";
 import { CardObject } from "../objects/card-object";
@@ -15,8 +15,10 @@ import { AlternatingColorStrategy } from "../objects/alternating-color-strategy"
 import { SingleCardAnchor } from "../objects/single-card-anchor";
 import { StraightHorizontalCardAnchor } from "../objects/straight-horizontal-card-anchor";
 import { Card } from "../card-shoe/cards/card";
+import { Dom } from "../objects/dom";
 
 const game = GameData.getInstance()
+const ui = Dom.getInstance()
 const width = 128
 const height = 192
 
@@ -47,10 +49,8 @@ export class TableScene extends Scene {
   private stackManager?: StackManager
   private countUpStrategy = new CountUpStrategy()
   private alternatingColorStrategy = new AlternatingColorStrategy()
-  private menuButton = game.controlFactory.create('MENU', TextAlign.Left, Color.White)
-  private dealAgainButton = game.controlFactory.create('NEW GAME', TextAlign.Left, Color.White)
-  private restartButton = game.controlFactory.create('RESTART', TextAlign.Left, Color.White)
   private originalCardOrder: Card[] = []
+  private quitButton: HTMLButtonElement | null = null
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
@@ -91,6 +91,7 @@ export class TableScene extends Scene {
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
     super.onActivate(context)
 
+    game.state = State.PLAYING
     this.positionAssets(context.engine)
     this.debug()
 
@@ -99,12 +100,6 @@ export class TableScene extends Scene {
     this.add(this.displayAnchor2)
     this.add(this.displayAnchor3)
     this.add(this.temporary)
-    this.add(this.menuButton)
-    this.add(this.dealAgainButton)
-    this.add(this.restartButton)
-    this.menuButton.on('pointerup', this.onMenuClick)
-    this.dealAgainButton.on('pointerup', this.onDealAgainClick)
-    this.restartButton.on('pointerup', this.onRestartClick)
     this.playAreas.forEach(a => this.add(a))
     this.targets.forEach(a => this.add(a))
 
@@ -125,14 +120,13 @@ export class TableScene extends Scene {
     this.remove(this.deckAnchor)
     this.remove(this.displayAnchor)
     this.remove(this.temporary)
-    this.remove(this.menuButton)
-    this.remove(this.dealAgainButton)
-    this.remove(this.restartButton)
-    this.menuButton.off('pointerup', this.onMenuClick)
-    this.dealAgainButton.off('pointerup', this.onDealAgainClick)
-    this.restartButton.off('pointerup', this.onRestartClick)
     this.playAreas.forEach(a => this.remove(a))
     this.targets.forEach(a => this.remove(a))
+
+    if (this.quitButton) {
+      this.quitButton.removeEventListener('click', this.onQuitClick)
+      this.quitButton = null
+    }
   }
 
   private dealCards() {
@@ -162,7 +156,6 @@ export class TableScene extends Scene {
 
   private positionAssets(engine: Engine) {
     const stageWidth = engine.screen.width
-    const stageHeight = engine.screen.height
     const padding = 96
     this.deckAnchor.pos.x = 96
     this.deckAnchor.pos.y = 112
@@ -198,10 +191,15 @@ export class TableScene extends Scene {
     const position = engine.input.pointers.at(0).lastScreenPos
     this.temporary.pos.x = position.x
     this.temporary.pos.y = position.y
+  }
 
-    this.menuButton.pos = vec(10, stageHeight - 40)
-    this.restartButton.pos = vec(this.menuButton.pos.x + 100, stageHeight - 40)
-    this.dealAgainButton.pos = vec(this.restartButton.pos.x + 120, stageHeight - 40)
+  override onPostUpdate(engine: Engine, elapsed: number): void {
+    super.onPostUpdate(engine, elapsed)
+
+    if (!this.quitButton) {
+      this.quitButton = ui.root.querySelector<HTMLButtonElement>('#quit-button')
+      this.quitButton?.addEventListener('click', this.onQuitClick)
+    }
   }
 
   private debug() {
@@ -209,16 +207,7 @@ export class TableScene extends Scene {
     window['g'] = { deck: this.deckAnchor, plays: this.playAreas, targets: this.targets, display: this.displayAnchor, cards: this.cards, temporary: this.temporary }
   }
 
-  private onMenuClick = () => {
+  private onQuitClick = () => {
     this.engine.goToScene('menu')
-  }
-
-  private onDealAgainClick = () => {
-    game.shuffle()
-    this.dealCards()
-  }
-
-  private onRestartClick = () => {
-
   }
 }

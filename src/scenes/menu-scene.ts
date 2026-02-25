@@ -1,79 +1,37 @@
-import { Color, Engine, Scene, SceneActivationContext, TextAlign, vec } from "excalibur";
-import { GameData } from "../data/game-data";
-import { ButtonBackdrop } from "../objects/button-backdrop";
+import { Color, Engine, ExcaliburGraphicsContext, Scene, SceneActivationContext } from "excalibur";
+import { GameData, State } from "../data/game-data";
+import { Dom } from "../objects/dom";
 
 const game = GameData.getInstance()
+const ui = Dom.getInstance()
 
 export class MenuScene extends Scene {
   backgroundColor = Color.Azure
 
-  private titleLabel = game.titleFactory.create('Solitaire', TextAlign.Center, Color.White)
-  private playButton = game.controlFactory.create('PLAY', TextAlign.Center, Color.White)
-  private dealLabel = game.controlFactory.create('Deal', TextAlign.Center, Color.White)
-  private dealOne = game.controlFactory.create('One', TextAlign.Right, Color.White)
-  private dealThree = game.controlFactory.create('Three', TextAlign.Left, Color.White)
-  private dealSettingMarker = new ButtonBackdrop()
+  private startButton: HTMLButtonElement | null = null
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
-    super.onActivate(context)
+    super.onActivate(context);
 
-    this.add(this.titleLabel)
-    this.add(this.playButton)
-    this.add(this.dealLabel)
-    this.add(this.dealOne)
-    this.add(this.dealThree)
-    this.add(this.dealSettingMarker)
+    game.state = State.MAIN_MENU
+  }
 
-    if (game.dealCount === 3) {
-      this.dealSettingMarker.connectedCompoennt = this.dealThree
-    } else {
-      this.dealSettingMarker.connectedCompoennt = this.dealOne
+  override onPreUpdate(engine: Engine, elapsed: number): void {
+    super.onPreUpdate(engine, elapsed)
+    
+    if (!this.startButton) {
+      this.startButton = ui.root.querySelector<HTMLButtonElement>('#play-game')
+      this.startButton?.addEventListener('click', this.onPlay)
     }
-
-    this.dealOne.on('pointerup', this.onDealOne)
-    this.dealThree.on('pointerup', this.onDealThree)
-    this.playButton.on('pointerup', this.onPlay)
   }
 
   override onDeactivate(context: SceneActivationContext) {
     super.onDeactivate(context)
 
-    this.remove(this.titleLabel)
-    this.remove(this.playButton)
-    this.remove(this.dealLabel)
-    this.remove(this.dealOne)
-    this.remove(this.dealThree)
-    this.remove(this.dealSettingMarker)
-
-    this.dealOne.off('pointerup', this.onDealOne)
-    this.dealThree.off('pointerup', this.onDealThree)
-    this.playButton.off('pointerup', this.onPlay)
-  }
-
-  override onPostUpdate(engine: Engine, elapsed: number): void {
-    const width = engine.screen.width
-    const height = engine.screen.height
-    const halfWidth = width / 2
-    const halfHeight = height / 2
-    const titleVector = vec(halfWidth, halfHeight - 100)
-    const playVector = vec(titleVector.x, titleVector.y + 100)
-    const dealLabelVector = vec(playVector.x, playVector.y + 50)
-    const dealOneVector = vec(dealLabelVector.x - 10, dealLabelVector.y + 40)
-    const dealThreeVector = vec(dealLabelVector.x + 10, dealLabelVector.y + 40)
-
-    this.titleLabel.pos = titleVector
-    this.playButton.pos = playVector
-    this.dealLabel.pos = dealLabelVector
-    this.dealOne.pos = dealOneVector
-    this.dealThree.pos = dealThreeVector
-  }
-
-  private onDealOne = () => {
-    game.dealCount = 1
-  }
-
-  private onDealThree = () => {
-    game.dealCount = 3
+    if (this.startButton) {
+      this.startButton.removeEventListener('click', this.onPlay)
+    }
+    this.startButton = null
   }
 
   private onPlay = () => {

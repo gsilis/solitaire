@@ -1,11 +1,13 @@
-import { Actor, ActorArgs, Color, Engine, Label, TextAlign, vec, Vector } from "excalibur";
+import { Actor, ActorArgs, Color, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
 import { GameData } from "../data/game-data";
 import { times } from "../utils/times";
 import { ACE, Card, EIGHT, FIVE, FOUR, NINE, SEVEN, SIX, TEN, THREE, TWO, Value } from "../card-shoe/cards/card";
+import { Factories } from "../objects/factories";
 
 const game = GameData.getInstance()
+const factories = Factories.getInstance()
 const positions: Partial<Record<Value, Vector[]>> = {
   [ACE]: [
     vec(0, 0)
@@ -112,11 +114,11 @@ export class CardGraphic extends Actor {
     this._card = card
     this._side = face || CardSide.BACK
     const color = this._card.isRed ? Color.Red : Color.Black
-    this._label1 = game.labelFactory.create(this._card.symbol, undefined, color)
-    this._label2 = game.labelFactory.create(this._card.symbol, undefined, color)
+    this._label1 = factories.labelFactory.create(this._card.symbol, undefined, color)
+    this._label2 = factories.labelFactory.create(this._card.symbol, undefined, color)
     this._label2.rotation = Math.PI
-    this._icon1 = game.suitFactory.create(this._card.suit)
-    this._icon2 = game.suitFactory.create(this._card.suit)
+    this._icon1 = factories.suitFactory.create(this._card.suit)
+    this._icon2 = factories.suitFactory.create(this._card.suit)
     this._icon2.rotation = Math.PI
     this._icon1.scale.x = this._icon1.scale.y = 0.6
     this._icon2.scale.x = this._icon2.scale.y = 0.6
@@ -187,7 +189,7 @@ export class CardGraphic extends Actor {
     if (isNaN(count)) return
 
     times(count).forEach(() => {
-      this._suitMarkers.push(game.suitFactory.create(this._card.suit))
+      this._suitMarkers.push(factories.suitFactory.create(this._card.suit))
     })
   }
 }

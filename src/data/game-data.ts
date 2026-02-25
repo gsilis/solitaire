@@ -1,26 +1,72 @@
+import Alpine from "alpinejs"
 import { Shoe } from "../card-shoe/shoe"
-import { LabelFactory } from "../factories/label-factory"
-import { SuitFactory } from "../factories/suit-factory"
-import { CARD_FONT, CONTROL_FONT, TITLE_FONT } from "./fonts"
 
 let gameData: GameData
 
+export class State {
+  static INITIAL = 'initial'
+  static MAIN_MENU = 'main_menu'
+  static PLAYING = 'playing'
+  static GAME_OVER_ANIMATING = 'game_over_animating'
+  static GAME_OVER = 'game_over'
+}
+
 export class GameData {
-  labelFactory = new LabelFactory(CARD_FONT)
-  titleFactory = new LabelFactory(TITLE_FONT)
-  controlFactory = new LabelFactory(CONTROL_FONT)
-  suitFactory = new SuitFactory()
   shoe = new Shoe(1)
-  dealCount = 3
+  _dealCount = 3
+  _state: State = State.INITIAL
 
   private constructor() {}
 
-  public static getInstance() {
+  static getInstance() {
     if (!gameData) {
-      gameData = new GameData()
+      Alpine.store('game', new GameData())
+      gameData = Alpine.store('game') as GameData
     }
 
     return gameData
+  }
+
+  get state() {
+    return this._state
+  }
+
+  set state(newState: State) {
+    this._state = newState
+  }
+
+  get isMainMenu() {
+    return this.state === State.MAIN_MENU
+  }
+
+  get isPlaying() {
+    return this.state === State.PLAYING
+  }
+
+  get dealOne() {
+    return this.dealCount === 1
+  }
+
+  get dealThree() {
+    return this.dealCount === 3
+  }
+
+  get dealCount() {
+    return this._dealCount
+  }
+
+  set dealCount(value: number) {
+    // @ts-ignore
+    const cast = parseInt(value)
+    this._dealCount = cast
+  }
+
+  get isGameOverAnimating() {
+    return this.state === State.GAME_OVER_ANIMATING
+  }
+
+  get isGameOver() {
+    return this.state === State.GAME_OVER
   }
 
   shuffle() {

@@ -1,5 +1,58 @@
+@import "tailwindcss";
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: black;
+  }
+
+  .title {
+    @apply font-[Arial];
+    @apply font-bold;
+    @apply text-3xl;
+    @apply text-white;
+    text-align: center;
+  }
+
+  .button {
+    @apply text-sky-700;
+    @apply font-bold;
+    @apply tracking-widest;
+    @apply px-5;
+    @apply py-3;
+    @apply bg-sky-200;
+    @apply rounded-xl;
+    display: inline-block;
+    transition: all;
+    transition-duration: 0.2s;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    scale: 1.2;
+  }
+
+  .button:active {
+    scale: 1.2;
+    @apply bg-sky-500;
+    @apply text-white;
+  }
+
+  .radio-group {
+    @apply text-white;
+  }
+
+  .radio-group label {
+    @apply px-3;
+    @apply py-2;
+    cursor: pointer;
+  }
+
+  .radio-group label.selected {
+    @apply rounded-xl;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .radio-group label input {
+    display: none;
   }
 }

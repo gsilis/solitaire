@@ -1,10 +1,20 @@
 import { DisplayMode, Engine } from "excalibur";
 import { loader } from "./resources";
 import { TestScene } from "./scenes/test-scene";
-import { TableScene } from "./scenes/table-scene"
+import { TableScene } from "./scenes/table-scene";
 import { MenuScene } from "./scenes/menu-scene";
+import Alpine from "alpinejs";
+import { GameData } from "./data/game-data";
 
-// Goal is to keep main.ts small and just enough to configure the engine
+declare global {
+  interface Window {
+    Alpine: typeof Alpine;
+    GameData: typeof GameData;
+  }
+}
+
+window.Alpine = Alpine
+window.GameData = GameData
 
 const game = new Engine({
   width: 1280, // Logical width and height in game pixels
@@ -29,3 +39,5 @@ game.start('menu', { // name of the start scene 'start'
 }).then(() => {
   // Do something after the game starts
 });
+
+Alpine.start()
