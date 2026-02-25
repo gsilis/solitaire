@@ -1,4 +1,4 @@
-import { Color, DisplayMode, Engine, FadeInOut } from "excalibur";
+import { DisplayMode, Engine } from "excalibur";
 import { loader } from "./resources";
 import { TestScene } from "./scenes/test-scene";
 import { TableScene } from "./scenes/table-scene"
@@ -16,6 +16,7 @@ const game = new Engine({
     table: TableScene,
     test: TestScene,
   },
+  canvasElementId: 'game-canvas',
   // physics: {
   //   solver: SolverStrategy.Realistic,
   //   substep: 5 // Sub step the physics simulation for more robust simulations
@@ -25,11 +26,6 @@ const game = new Engine({
 
 game.start('menu', { // name of the start scene 'start'
   loader, // Optional loader (but needed for loading images/sounds)
-  inTransition: new FadeInOut({ // Optional in transition
-    duration: 1000,
-    direction: 'in',
-    color: Color.ExcaliburBlue
-  })
 }).then(() => {
   // Do something after the game starts
 });
