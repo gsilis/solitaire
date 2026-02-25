@@ -2,6 +2,7 @@ import { Color, DisplayMode, Engine, FadeInOut } from "excalibur";
 import { loader } from "./resources";
 import { TestScene } from "./scenes/test-scene";
 import { TableScene } from "./scenes/table-scene"
+import { MenuScene } from "./scenes/menu-scene";
 
 // Goal is to keep main.ts small and just enough to configure the engine
 
@@ -11,6 +12,7 @@ const game = new Engine({
   displayMode: DisplayMode.FillScreen, // Display mode tells excalibur how to fill the window
   pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
   scenes: {
+    menu: MenuScene,
     table: TableScene,
     test: TestScene,
   },
@@ -21,7 +23,7 @@ const game = new Engine({
   // fixedUpdateTimestep: 16 // Turn on fixed update timestep when consistent physic simulation is important
 });
 
-game.start('table', { // name of the start scene 'start'
+game.start('menu', { // name of the start scene 'start'
   loader, // Optional loader (but needed for loading images/sounds)
   inTransition: new FadeInOut({ // Optional in transition
     duration: 1000,

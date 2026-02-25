@@ -1,12 +1,14 @@
 import { Shoe } from "../card-shoe/shoe"
 import { LabelFactory } from "../factories/label-factory"
 import { SuitFactory } from "../factories/suit-factory"
-import { CARD_FONT } from "./fonts"
+import { CARD_FONT, CONTROL_FONT, TITLE_FONT } from "./fonts"
 
 let gameData: GameData
 
 export class GameData {
   labelFactory = new LabelFactory(CARD_FONT)
+  titleFactory = new LabelFactory(TITLE_FONT)
+  controlFactory = new LabelFactory(CONTROL_FONT)
   suitFactory = new SuitFactory()
   shoe = new Shoe(1)
   dealCount = 3
