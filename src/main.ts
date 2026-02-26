@@ -5,6 +5,8 @@ import { TableScene } from "./scenes/table-scene";
 import { MenuScene } from "./scenes/menu-scene";
 import Alpine from "alpinejs";
 import { GameData } from "./data/game-data";
+import { GaemOver } from "./scenes/game-over";
+import { GameOverAnimating } from "./scenes/game-over-animating";
 
 declare global {
   interface Window {
@@ -25,6 +27,8 @@ const game = new Engine({
     menu: MenuScene,
     table: TableScene,
     test: TestScene,
+    gameOver: GaemOver,
+    gameOverAnimating: GameOverAnimating,
   },
   canvasElementId: 'game-canvas',
   // physics: {

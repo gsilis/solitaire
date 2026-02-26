@@ -13,7 +13,7 @@ export class AlternatingColorStrategy implements AcceptCardStrategy {
     const nextCardValue = ACCEPT[lastCardIndex + 1]
     const differentColors = lastCard?.isRed !== card?.isRed
 
-    if (!lastCard && card.value === KING) {
+    if (!lastCard && card?.value === KING) {
       return true
     } else if (nextCardValue && card?.value === nextCardValue && differentColors) {
       return true

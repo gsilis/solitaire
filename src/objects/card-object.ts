@@ -26,6 +26,10 @@ export class CardObject extends Actor implements Stackable {
     return this._graphics.side === CardSide.BACK
   }
 
+  get card() {
+    return this._card
+  }
+
   override onAdd(engine: Engine): void {
     super.onAdd(engine)
     this.addChild(this._graphics)

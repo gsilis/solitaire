@@ -47,6 +47,25 @@
             <span class="value" x-text="wins"></span>
           </span>
         </div>
+        <div x-show="isGameOverAnimating" id="game_over_animating" class="w-screen flex flex-row items-center absolute bottom-0">
+          <div class="spacer"></div>
+          <span class="label" id="gmae-attempts">
+            <span class="title">Attempts: </span>
+            <span class="value" x-text="attempts"></span>
+          </span>
+          <span class="label" id="game-plays">
+            <span class="title">Hands: </span>
+            <span class="value" x-text="plays"></span>
+          </span>
+          <span class="label" id="game-wins">
+            <span class="title">Wins: </span>
+            <span class="value" x-text="wins"></span>
+          </span>
+        </div>
+        <div x-show="isGameOver" id="game_over" class="w-screen h-screen flex flex-col items-center justify-center absolute bottom-0 gap-10">
+          <button class="button" id="new-game">New Game</button>
+          <button class="button" id="menu">Back to Menu</button>
+        </div>
       </div>
     </div>
   </body>

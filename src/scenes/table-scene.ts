@@ -14,7 +14,7 @@ import { CountUpStrategy } from "../objects/count-up-strategy";
 import { AlternatingColorStrategy } from "../objects/alternating-color-strategy";
 import { SingleCardAnchor } from "../objects/single-card-anchor";
 import { StraightHorizontalCardAnchor } from "../objects/straight-horizontal-card-anchor";
-import { Card } from "../card-shoe/cards/card";
+import { ACE, Card, KING } from "../card-shoe/cards/card";
 import { Dom } from "../objects/dom";
 
 const game = GameData.getInstance()
@@ -54,10 +54,12 @@ export class TableScene extends Scene {
   private redealButton: HTMLButtonElement | null = null
   private resetButton: HTMLButtonElement | null = null
   private dealing: boolean = false
+  backgroundColor = Color.fromHex('#146e2d')
 
   onInitialize(engine: Engine): void {
+    //@ts-ignore
+    window.table = this
     super.onInitialize(engine)
-    this.backgroundColor = Color.fromHex('#146e2d')
 
     const stackManager = new StackManager(this.temporary)
     stackManager.addStack(this.deckAnchor)
@@ -229,6 +231,14 @@ export class TableScene extends Scene {
       this.resetButton = ui.root.querySelector<HTMLButtonElement>('#reset-button')
       this.resetButton?.addEventListener('click', this.onRestartClick)
     }
+
+    const hasWon = this.targets.reduce((win, target) => {
+      return win && (target.lastCard as CardObject)?.value === KING
+    }, true)
+
+    if (hasWon) {
+      this.winGame()
+    }
   }
 
   private debug() {
@@ -274,5 +284,16 @@ export class TableScene extends Scene {
       this.remove(card)
     })
     this.cards = []
+  }
+
+  private winGame = () => {
+    const cards = this.targets.map((card) => {
+      return card.tree().map(stackable => {
+        const card = stackable as CardObject
+        return card.card
+      })
+    })
+
+    this.engine.goToScene('gameOverAnimating', { sceneActivationData: cards })
   }
 }
