@@ -1,4 +1,4 @@
-import { Actor, easeInCubic, Engine, vec, Vector } from "excalibur";
+import { ActionSequence, Actor, easeInCubic, Engine, ParallelActions, vec, Vector } from "excalibur";
 import { CardGraphic } from "../graphics/card-graphic";
 import { Shoe } from "../card-shoe/shoe";
 import { times, timesWithIndex } from "../utils/times";
@@ -68,8 +68,13 @@ export class CardAnimation extends Actor {
       timesWithIndex(index).reduce((actions, i) => {
         const position = positions[i]
         const rotation = rotations[i]
+        const duration = 3 * i
+        const easing = easeInCubic
 
-        return actions.rotateTo({ angle: rotation, duration: 0 }).moveTo({ pos: position, duration: 3 * i, easing: easeInCubic })
+        return actions.runAction(new ParallelActions([
+          new ActionSequence(card, ctx => { ctx.moveTo({ pos: position, duration, easing }) }),
+          new ActionSequence(card, ctx => { ctx.rotateTo({ angle: rotation, duration }) })
+        ]))
       }, card.actions.moveTo({ pos: positions[0], duration: 0 }).rotateTo({ angle: rotations[0], duration: 0 }))
     })
   }
