@@ -1,6 +1,6 @@
-import { Color, Engine, Scene, SceneActivationContext, TextAlign, vec } from "excalibur";
+import { Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
 import { StraightDownCardAnchor } from "../objects/straight-down-card-anchor";
-import { GameData, SCREEN_WIDTH, State } from "../data/game-data";
+import { GameData, State } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
 import { times } from "../utils/times";
 import { CardObject } from "../objects/card-object";
@@ -177,7 +177,6 @@ export class TableScene extends Scene {
 
   private positionAssets(engine: Engine) {
     const origin = engine.screenToWorldCoordinates(vec(0, 0))
-    const rightTop = engine.screenToWorldCoordinates(vec(SCREEN_WIDTH, 0))
     const stageWidth = engine.screen.width
     const padding = 96
     this.deckAnchor.pos.x = origin.x +96
@@ -300,6 +299,7 @@ export class TableScene extends Scene {
     this.engine.goToScene('gameOverAnimating', { sceneActivationData: cards })
   }
 
+  // @ts-ignore
   private debugSolve() {
     const order = [ ...values ]
     const ace = order.pop()

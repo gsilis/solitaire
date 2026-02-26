@@ -1,12 +1,10 @@
 import { Actor, ActorArgs, Color, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
-import { GameData } from "../data/game-data";
 import { times } from "../utils/times";
 import { ACE, Card, EIGHT, FIVE, FOUR, NINE, SEVEN, SIX, TEN, THREE, TWO, Value } from "../card-shoe/cards/card";
 import { Factories } from "../objects/factories";
 
-const game = GameData.getInstance()
 const factories = Factories.getInstance()
 const positions: Partial<Record<Value, Vector[]>> = {
   [ACE]: [

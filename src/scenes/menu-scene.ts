@@ -1,4 +1,4 @@
-import { Color, Engine, ExcaliburGraphicsContext, Scene, SceneActivationContext, vec } from "excalibur";
+import { Color, Engine, Scene, SceneActivationContext } from "excalibur";
 import { GameData, State } from "../data/game-data";
 import { Dom } from "../objects/dom";
 import { CardAnimation } from "../objects/card-animation";
