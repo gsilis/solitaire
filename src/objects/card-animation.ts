@@ -42,11 +42,11 @@ export class CardAnimation extends Actor {
 
   private runAnimation = () => {
     const size = this.cards.length
-    const widthx = 500
+    const widthx = 350
     const unit = widthx / (size - 1)
     const offset = -(widthx / 2)
     const radian = Math.PI / 180
-    const radianRange = 120
+    const radianRange = 100
     const radianOffset = -(radianRange / 2)
     const radianUnit = radianRange / (size - 1)
     const multiplier = Math.PI / widthx
@@ -55,7 +55,7 @@ export class CardAnimation extends Actor {
 
     this.cards.forEach((_, index) => {
       const x = unit * index
-      const y = (widthx / 4.5) * Math.sin((multiplier * x))
+      const y = (widthx / 5) * Math.sin((multiplier * x))
 
       const cardPosition = vec(x + offset, -y)
       const cardRotation = (radianOffset + (radianUnit * index)) * radian

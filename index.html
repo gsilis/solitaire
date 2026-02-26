@@ -15,18 +15,20 @@
       </div>
       <div class="ui absolute bottom-0" x-data="$store.game">
         <div x-show="isMainMenu" id="main_menu" class="w-screen h-screen flex flex-col items-center justify-center">
-          <h1 class="title mb-10">SOLITAIRE</h1>
-          <button id="play-game" class="button">PLAY</button>
-          <hr class="mb-15" />
-          <div class="flex flex-row gap-6 radio-group">
-            <label class="flex justify-center" x-bind:class="{'selected': dealCount === 1}">
-              <input type="radio" name="deal-count" value="1" x-model="dealCount" @click="dealOne" />
-              <span>Deal One</span>
-            </label>
-            <label class="flex justify-center" x-bind:class="{'selected': dealCount === 3}">
-              <input type="radio" name="deal-count" value="3" x-model="dealCount" @click="dealThree" />
-              <span>Deal Three</span>
-            </label>
+          <div class="py-5 w-full flex align-center flex-col items-center title-container">
+            <h1 class="title mb-10 text-shadow-lg">SOLITAIRE</h1>
+            <button id="play-game" class="button">PLAY</button>
+            <hr class="mb-15" />
+            <div class="flex flex-row gap-6 radio-group">
+              <label class="flex justify-center" x-bind:class="{'selected': dealCount === 1}">
+                <input type="radio" name="deal-count" value="1" x-model="dealCount" @click="dealOne" />
+                <span>Deal One</span>
+              </label>
+              <label class="flex justify-center" x-bind:class="{'selected': dealCount === 3}">
+                <input type="radio" name="deal-count" value="3" x-model="dealCount" @click="dealThree" />
+                <span>Deal Three</span>
+              </label>
+            </div>
           </div>
         </div>
         <div x-show="isPlaying" id="playing" class="w-screen flex flex-row items-center absolute bottom-[30px]">

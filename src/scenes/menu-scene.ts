@@ -11,6 +11,8 @@ export class MenuScene extends Scene {
 
   private startButton: HTMLButtonElement | null = null
   private cardAnimation: CardAnimation = new CardAnimation()
+  private offset: number = 0
+  private time: number = 0
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
     super.onActivate(context);
@@ -21,6 +23,9 @@ export class MenuScene extends Scene {
 
   override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed)
+
+    this.time += elapsed
+    this.offset = 5 * Math.sin((this.time / 2000) * (10 / Math.PI))
     
     if (!this.startButton) {
       this.startButton = ui.root.querySelector<HTMLButtonElement>('#play-game')
@@ -28,7 +33,7 @@ export class MenuScene extends Scene {
     }
 
     const position = engine.screenToWorldCoordinates(engine.screen.center)
-    position.y -= 180
+    position.y -= (100 + this.offset)
     this.cardAnimation.pos = position
   }
 
