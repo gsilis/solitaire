@@ -1,7 +1,7 @@
-import { Actor, Engine, vec, Vector } from "excalibur";
+import { Actor, easeInCubic, Engine, vec, Vector } from "excalibur";
 import { CardGraphic } from "../graphics/card-graphic";
 import { Shoe } from "../card-shoe/shoe";
-import { times } from "../utils/times";
+import { times, timesWithIndex } from "../utils/times";
 
 const xspan = 200
 const halfSpan = xspan / 2
@@ -50,22 +50,27 @@ export class CardAnimation extends Actor {
     const radianOffset = -(radianRange / 2)
     const radianUnit = radianRange / (size - 1)
     const multiplier = Math.PI / widthx
+    const positions: Vector[] = []
+    const rotations: number[] = []
 
-    const iniitalpos = vec(offset, 0)
-    const initialrotation = radianOffset * radian
-
-    this.cards.forEach((card, index) => {
+    this.cards.forEach((_, index) => {
       const x = unit * index
       const y = (widthx / 4.5) * Math.sin((multiplier * x))
 
       const cardPosition = vec(x + offset, -y)
       const cardRotation = (radianOffset + (radianUnit * index)) * radian
 
-      card.actions
-        .moveTo({ pos: iniitalpos, duration: 0 })
-        .delay(index * 10)
-        .rotateTo({ angle: cardRotation, duration: 20 })
-        .moveTo({ pos: cardPosition, duration: 300 })
+      positions.push(cardPosition)
+      rotations.push(cardRotation)
+    })
+
+    this.cards.forEach((card, index) => {
+      timesWithIndex(index).reduce((actions, i) => {
+        const position = positions[i]
+        const rotation = rotations[i]
+
+        return actions.rotateTo({ angle: rotation, duration: 0 }).moveTo({ pos: position, duration: 3 * i, easing: easeInCubic })
+      }, card.actions.moveTo({ pos: positions[0], duration: 0 }).rotateTo({ angle: rotations[0], duration: 0 }))
     })
   }
 }
