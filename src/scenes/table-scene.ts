@@ -14,7 +14,7 @@ import { CountUpStrategy } from "../objects/count-up-strategy";
 import { AlternatingColorStrategy } from "../objects/alternating-color-strategy";
 import { SingleCardAnchor } from "../objects/single-card-anchor";
 import { StraightHorizontalCardAnchor } from "../objects/straight-horizontal-card-anchor";
-import { ACE, Card, KING } from "../card-shoe/cards/card";
+import { Card, KING, suits, values } from "../card-shoe/cards/card";
 import { Dom } from "../objects/dom";
 
 const game = GameData.getInstance()
@@ -294,6 +294,29 @@ export class TableScene extends Scene {
       })
     })
 
+    this.clearArea()
     this.engine.goToScene('gameOverAnimating', { sceneActivationData: cards })
+  }
+
+  private debugSolve() {
+    const order = [ ...values ]
+    const ace = order.pop()
+    if (ace) order.unshift(ace)
+    let count = 0
+
+    order.forEach((value) => {
+      const cards = this.cards.filter(c => c.value === value)
+      cards.forEach(card => {
+        const target = this.targets[suits.indexOf(card.suit)]
+        card.flip()
+        if (count < 51) {
+          target.attach(card)
+        } else {
+          this.playAreas[this.playAreas.length - 1].next = null
+          this.playAreas[this.playAreas.length - 1].attach(card)
+        }
+        count++
+      })
+    })
   }
 }
