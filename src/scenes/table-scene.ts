@@ -1,6 +1,6 @@
 import { Color, Engine, Scene, SceneActivationContext, TextAlign, vec } from "excalibur";
 import { StraightDownCardAnchor } from "../objects/straight-down-card-anchor";
-import { GameData, State } from "../data/game-data";
+import { GameData, SCREEN_WIDTH, State } from "../data/game-data";
 import { HangingCardAnchor } from "../objects/hanging-card-anchor";
 import { times } from "../utils/times";
 import { CardObject } from "../objects/card-object";
@@ -176,10 +176,12 @@ export class TableScene extends Scene {
   }
 
   private positionAssets(engine: Engine) {
+    const origin = engine.screenToWorldCoordinates(vec(0, 0))
+    const rightTop = engine.screenToWorldCoordinates(vec(SCREEN_WIDTH, 0))
     const stageWidth = engine.screen.width
     const padding = 96
-    this.deckAnchor.pos.x = 96
-    this.deckAnchor.pos.y = 112
+    this.deckAnchor.pos.x = origin.x +96
+    this.deckAnchor.pos.y = origin.y + 108
     this.displayAnchor.pos.x = this.deckAnchor.pos.x + 168
     this.displayAnchor2.pos.x = this.displayAnchor.pos.x + 28
     this.displayAnchor3.pos.x = this.displayAnchor2.pos.x + 28
@@ -190,7 +192,7 @@ export class TableScene extends Scene {
     this.displayAnchor3.z = INDICES.PILE_2
 
     const yTarget = this.deckAnchor.pos.y
-    let xTarget = engine.screen.width - padding
+    let xTarget = origin.x + engine.screen.width - padding
     this.targets.forEach((target, index) => {
       target.pos.x = xTarget
       target.pos.y = yTarget
@@ -200,8 +202,8 @@ export class TableScene extends Scene {
 
     const minusPadding = stageWidth - (padding * 2)
     const unit = minusPadding / (this.playAreas.length - 1)
-    const yPlay = 384
-    let xPlay = padding
+    const yPlay = this.deckAnchor.pos.y + 212
+    let xPlay = origin.x + padding
     this.playAreas.forEach((play, index) => {
       play.pos.x = xPlay
       play.pos.y = yPlay

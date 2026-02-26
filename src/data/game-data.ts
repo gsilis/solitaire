@@ -4,6 +4,9 @@ import { Card } from "../card-shoe/cards/card"
 
 let gameData: GameData
 
+export const SCREEN_WIDTH = 1280
+export const SCREEN_HEIGHT = 960
+
 export class State {
   static INITIAL = 'initial'
   static MAIN_MENU = 'main_menu'

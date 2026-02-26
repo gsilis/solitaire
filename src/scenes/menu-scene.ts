@@ -1,4 +1,4 @@
-import { Color, Engine, Scene, SceneActivationContext, vec } from "excalibur";
+import { Color, Engine, ExcaliburGraphicsContext, Scene, SceneActivationContext, vec } from "excalibur";
 import { GameData, State } from "../data/game-data";
 import { Dom } from "../objects/dom";
 import { CardAnimation } from "../objects/card-animation";
@@ -27,7 +27,9 @@ export class MenuScene extends Scene {
       this.startButton?.addEventListener('click', this.onPlay)
     }
 
-    this.cardAnimation.pos = vec(engine.screen.width / 2, (engine.screen.height / 2) - 180)
+    const position = engine.screenToWorldCoordinates(engine.screen.center)
+    position.y -= 180
+    this.cardAnimation.pos = position
   }
 
   override onDeactivate(context: SceneActivationContext) {
