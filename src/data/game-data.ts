@@ -1,5 +1,6 @@
 import Alpine from "alpinejs"
 import { Shoe } from "../card-shoe/shoe"
+import { Card } from "../card-shoe/cards/card"
 
 let gameData: GameData
 
@@ -72,6 +73,10 @@ export class GameData {
   shuffle() {
     this.shoe = new Shoe(1)
     this.shoe.shuffle()
+  }
+
+  reset(cards: Card[]) {
+    this.shoe.acceptSnapshot(cards)
   }
 
   deal() {

@@ -31,9 +31,9 @@ const INDICES = {
   PILE_1: 400,
   PILE_2: 600,
 
-  TARGETS: [200, 400, 600, 800],
+  TARGETS: [4000, 4000, 4000, 4000],
   PLAYS: [1000, 1200, 1400, 1600, 1800, 2000, 2200],
-  FLOATING: 2400,
+  FLOATING: 6000,
 }
 
 export class TableScene extends Scene {
@@ -51,6 +51,9 @@ export class TableScene extends Scene {
   private alternatingColorStrategy = new AlternatingColorStrategy()
   private originalCardOrder: Card[] = []
   private quitButton: HTMLButtonElement | null = null
+  private redealButton: HTMLButtonElement | null = null
+  private resetButton: HTMLButtonElement | null = null
+  private dealing: boolean = false
 
   onInitialize(engine: Engine): void {
     super.onInitialize(engine)
@@ -106,8 +109,8 @@ export class TableScene extends Scene {
     this.displayAnchor.enabledIfBlank = this.displayAnchor2
     this.displayAnchor2.enabledIfBlank = this.displayAnchor3
 
+    game.shuffle()
     this.dealCards()
-    this.dealer.deal()
   }
 
   override onDeactivate(context: SceneActivationContext) {
@@ -127,10 +130,20 @@ export class TableScene extends Scene {
       this.quitButton.removeEventListener('click', this.onQuitClick)
       this.quitButton = null
     }
+
+    if (this.redealButton) {
+      this.redealButton.removeEventListener('click', this.onRedealClick)
+      this.redealButton = null
+    }
+
+    if (this.resetButton) {
+      this.resetButton.removeEventListener('click', this.onRestartClick)
+      this.resetButton = null
+    }
   }
 
   private dealCards() {
-    game.shuffle()
+    this.dealing = true
     this.originalCardOrder = game.shoe.currentOrder()
     let cardData = game.deal()
 
@@ -152,6 +165,10 @@ export class TableScene extends Scene {
       this.add(card)
       cardData = game.deal()
     }
+
+    this.dealer.deal().then(() => {
+      this.dealing = false
+    })
   }
 
   private positionAssets(engine: Engine) {
@@ -200,6 +217,16 @@ export class TableScene extends Scene {
       this.quitButton = ui.root.querySelector<HTMLButtonElement>('#quit-button')
       this.quitButton?.addEventListener('click', this.onQuitClick)
     }
+
+    if (!this.redealButton) {
+      this.redealButton = ui.root.querySelector<HTMLButtonElement>('#redeal-button')
+      this.redealButton?.addEventListener('click', this.onRedealClick)
+    }
+
+    if (!this.resetButton) {
+      this.resetButton = ui.root.querySelector<HTMLButtonElement>('#reset-button')
+      this.resetButton?.addEventListener('click', this.onRestartClick)
+    }
   }
 
   private debug() {
@@ -209,5 +236,36 @@ export class TableScene extends Scene {
 
   private onQuitClick = () => {
     this.engine.goToScene('menu')
+  }
+
+  private onRedealClick = () => {
+    if (this.dealing) return
+    this.clearArea()
+    game.shuffle()
+    this.dealCards()
+  }
+
+  private onRestartClick = () => {
+    if (this.dealing) return
+    this.clearArea()
+    game.reset(this.originalCardOrder)
+    this.dealCards()
+  }
+
+  private clearArea = () => {
+    const anchors = [
+      this.deckAnchor,
+      this.displayAnchor,
+      this.displayAnchor2,
+      this.displayAnchor3,
+      ...this.targets,
+      ...this.playAreas
+    ]
+
+    anchors.forEach(a => a.next = null)
+    this.cards.forEach((card) => {
+      this.remove(card)
+    })
+    this.cards = []
   }
 }

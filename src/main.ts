@@ -34,7 +34,7 @@ const game = new Engine({
   // fixedUpdateTimestep: 16 // Turn on fixed update timestep when consistent physic simulation is important
 });
 
-game.start('menu', { // name of the start scene 'start'
+game.start('table', { // name of the start scene 'start'
   loader, // Optional loader (but needed for loading images/sounds)
 }).then(() => {
   // Do something after the game starts

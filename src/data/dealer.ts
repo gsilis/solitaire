@@ -11,44 +11,50 @@ export class Dealer {
   }
 
   deal() {
-    const targets = [...this.slots]
-    const targetSequence: CardAnchor[] = []
+    return new Promise<undefined>((resolve) => {
+      const targets = [...this.slots]
+      const targetSequence: CardAnchor[] = []
 
-    while (targets.length > 0) {
-      targets.forEach(t => targetSequence.push(t))
-      targets.shift()
-    }
+      while (targets.length > 0) {
+        targets.forEach(t => targetSequence.push(t))
+        targets.shift()
+      }
 
-    times(28).forEach((_, index) => {
-      const delay = 70 * index
-      
-      setTimeout(() => {
-        const card = this.deck.detach(1)[0]
-        const target = targetSequence.shift()
-
-        if (target) target.attach(card)
-      }, delay)
-    })
-
-    setTimeout(() => {
-      this.slots.forEach((slot, index) => {
+      times(28).forEach((_, index) => {
+        const delay = 70 * index
+        
         setTimeout(() => {
-          slot.flipLast()
-        }, 50 * index)
-      })
-    }, 1800)
+          const card = this.deck.detach(1)[0]
+          const target = targetSequence.shift()
 
-    while (targets.length > 0) {
-      targets.forEach((target) => {
-        const card = this.deck.detach(1)[0]
-        target.attach(card)
+          if (target) target.attach(card)
+        }, delay)
       })
 
-      targets.shift()
-    }
+      setTimeout(() => {
+        this.slots.forEach((slot, index) => {
+          setTimeout(() => {
+            slot.flipLast()
+          }, 50 * index)
+        })
 
-    this.slots.forEach(slot => {
-      slot.flipLast()
+        setTimeout(() => {
+          resolve(undefined)
+        }, 50 * this.slots.length)
+      }, 1800)
+
+      while (targets.length > 0) {
+        targets.forEach((target) => {
+          const card = this.deck.detach(1)[0]
+          target.attach(card)
+        })
+
+        targets.shift()
+      }
+
+      this.slots.forEach(slot => {
+        slot.flipLast()
+      })
     })
   }
 }
