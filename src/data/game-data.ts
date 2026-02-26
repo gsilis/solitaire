@@ -16,6 +16,9 @@ export class GameData {
   shoe = new Shoe(1)
   _dealCount = 3
   _state: State = State.INITIAL
+  _plays = 0
+  _attempts = 0
+  _wins = 0
 
   private constructor() {}
 
@@ -68,6 +71,30 @@ export class GameData {
 
   get isGameOver() {
     return this.state === State.GAME_OVER
+  }
+
+  get plays() {
+    return this._plays
+  }
+
+  set plays(value: number) {
+    this._plays = value
+  }
+
+  get attempts() {
+    return this._attempts
+  }
+
+  set attempts(value: number) {
+    this._attempts = value
+  }
+
+  get wins() {
+    return this._wins
+  }
+
+  set wins(value: number) {
+    this._wins = value
   }
 
   shuffle() {

@@ -29,10 +29,23 @@
             </label>
           </div>
         </div>
-        <div x-show="isPlaying" id="playing" class="w-full flex flex-row items-end absolute bottom-0">
+        <div x-show="isPlaying" id="playing" class="w-screen flex flex-row items-center absolute bottom-0">
           <button id="quit-button" class="button m-3">Quit</button>
           <button id="redeal-button" class="button m-3">New Game</button>
           <button id="reset-button" class="button m-3">Reset</button>
+          <div class="spacer"></div>
+          <span class="label" id="gmae-attempts">
+            <span class="title">Attempts: </span>
+            <span class="value" x-text="attempts"></span>
+          </span>
+          <span class="label" id="game-plays">
+            <span class="title">Hands: </span>
+            <span class="value" x-text="plays"></span>
+          </span>
+          <span class="label" id="game-wins">
+            <span class="title">Wins: </span>
+            <span class="value" x-text="wins"></span>
+          </span>
         </div>
       </div>
     </div>

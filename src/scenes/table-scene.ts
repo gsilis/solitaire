@@ -109,6 +109,8 @@ export class TableScene extends Scene {
     this.displayAnchor.enabledIfBlank = this.displayAnchor2
     this.displayAnchor2.enabledIfBlank = this.displayAnchor3
 
+    game.plays += 1
+    game.attempts = 1
     game.shuffle()
     this.dealCards()
   }
@@ -235,12 +237,16 @@ export class TableScene extends Scene {
   }
 
   private onQuitClick = () => {
+    if (this.dealing) return
+    this.clearArea()
     this.engine.goToScene('menu')
   }
 
   private onRedealClick = () => {
     if (this.dealing) return
     this.clearArea()
+    game.plays += 1
+    game.attempts = 1
     game.shuffle()
     this.dealCards()
   }
@@ -248,6 +254,7 @@ export class TableScene extends Scene {
   private onRestartClick = () => {
     if (this.dealing) return
     this.clearArea()
+    game.attempts += 1
     game.reset(this.originalCardOrder)
     this.dealCards()
   }

@@ -56,4 +56,26 @@
   .radio-group label input {
     display: none;
   }
+
+  div.spacer {
+    flex: 1;
+  }
+
+  span.label {
+    margin: 0 15px;
+  }
+
+  span.label span.title,
+  span.label span.value {
+    font-size: 14px;
+  }
+
+  span.label span.title {
+    color: lightgreen;
+  }
+
+  span.label span.value {
+    font-weight: bold;
+    color: white;
+  }
 }
