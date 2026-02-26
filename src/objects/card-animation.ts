@@ -51,12 +51,21 @@ export class CardAnimation extends Actor {
     const radianUnit = radianRange / (size - 1)
     const multiplier = Math.PI / widthx
 
+    const iniitalpos = vec(offset, 0)
+    const initialrotation = radianOffset * radian
+
     this.cards.forEach((card, index) => {
       const x = unit * index
       const y = (widthx / 4.5) * Math.sin((multiplier * x))
 
-      card.pos = vec(x + offset, -y)
-      card.rotation = (radianOffset + (radianUnit * index)) * radian
+      const cardPosition = vec(x + offset, -y)
+      const cardRotation = (radianOffset + (radianUnit * index)) * radian
+
+      card.actions
+        .moveTo({ pos: iniitalpos, duration: 0 })
+        .delay(index * 10)
+        .rotateTo({ angle: cardRotation, duration: 20 })
+        .moveTo({ pos: cardPosition, duration: 300 })
     })
   }
 }
