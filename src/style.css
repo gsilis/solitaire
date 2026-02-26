@@ -78,4 +78,8 @@
     font-weight: bold;
     color: white;
   }
+
+  div#playing {
+    background: rgba(0, 0, 0, 0.2);
+  }
 }
