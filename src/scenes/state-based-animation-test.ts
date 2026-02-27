@@ -3,8 +3,8 @@ import { CardGraphic } from "../graphics/card-graphic";
 import { StackShadow } from "../objects/stack-shadow";
 import { Card, HEART, TEN } from "../card-shoe/cards/card";
 import { CardSide } from "../data/card-side";
-import { HARVESTING, InputMachine, PLAYING } from "./animation-test/input-machine";
-import { InputStateMachineInstance } from "./animation-test/input-state-machine";
+import { HARVESTING, InputMachine, PLAYING } from "./state-based-animation-test/input-machine";
+import { InputStateMachineInstance } from "./state-based-animation-test/input-state-machine";
 import { Factories } from "../objects/factories";
 
 const factory = Factories.getInstance()
