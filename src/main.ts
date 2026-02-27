@@ -7,6 +7,7 @@ import Alpine from "alpinejs";
 import { GameData, SCREEN_HEIGHT, SCREEN_WIDTH } from "./data/game-data";
 import { GaemOver } from "./scenes/game-over";
 import { GameOverAnimating } from "./scenes/game-over-animating";
+import { StateBasedAnimationTest } from "./scenes/state-based-animation-test";
 
 declare global {
   interface Window {
@@ -29,6 +30,7 @@ const game = new Engine({
     test: TestScene,
     gameOver: GaemOver,
     gameOverAnimating: GameOverAnimating,
+    stateBasedAnimationTest: StateBasedAnimationTest
   },
   canvasElementId: 'game-canvas',
   // physics: {
