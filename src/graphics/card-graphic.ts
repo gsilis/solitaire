@@ -94,6 +94,7 @@ export class CardGraphic extends Actor {
   private _icon1: Actor
   private _icon2: Actor
   private _suitMarkers: Actor[] = []
+  private _followActor?: Actor
 
   get side() { return this._side }
   public flip() {
@@ -104,6 +105,17 @@ export class CardGraphic extends Actor {
     }
 
     this.updateGraphics()
+  }
+
+  set followTarget(actor: Actor | undefined) {
+    if (actor) {
+      this._followActor = actor
+      this.actions.clearActions()
+      this.actions.follow(this._followActor)
+    } else {
+      this._followActor = undefined
+      this.actions.clearActions()
+    }
   }
 
   constructor({ card, face, ...restOpts }: CardGraphicOpts) {

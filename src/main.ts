@@ -9,6 +9,7 @@ import { GaemOver } from "./scenes/game-over";
 import { GameOverAnimating } from "./scenes/game-over-animating";
 import { StateBasedAnimationTest } from "./scenes/state-based-animation-test";
 import { FollowAnimationTest } from "./scenes/follow-animaton-test";
+import { FollowAnchorPointTest } from "./scenes/follow-anchor-point-test";
 
 declare global {
   interface Window {
@@ -33,6 +34,7 @@ const game = new Engine({
     gameOverAnimating: GameOverAnimating,
     stateBasedAnimationTest: StateBasedAnimationTest,
     followAnimationTest: FollowAnimationTest,
+    followAnchorPointTest: FollowAnchorPointTest,
   },
   canvasElementId: 'game-canvas',
   // physics: {
