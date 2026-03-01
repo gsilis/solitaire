@@ -10,6 +10,7 @@ import { GameOverAnimating } from "./scenes/game-over-animating";
 import { StateBasedAnimationTest } from "./scenes/state-based-animation-test";
 import { FollowAnimationTest } from "./scenes/follow-animaton-test";
 import { FollowAnchorPointTest } from "./scenes/follow-anchor-point-test";
+import { NewTableauScene } from "./scenes/new-tableau-scene";
 
 declare global {
   interface Window {
@@ -35,6 +36,7 @@ const game = new Engine({
     stateBasedAnimationTest: StateBasedAnimationTest,
     followAnimationTest: FollowAnimationTest,
     followAnchorPointTest: FollowAnchorPointTest,
+    newTableau: NewTableauScene,
   },
   canvasElementId: 'game-canvas',
   // physics: {
@@ -44,7 +46,7 @@ const game = new Engine({
   // fixedUpdateTimestep: 16 // Turn on fixed update timestep when consistent physic simulation is important
 });
 
-game.start('menu', { // name of the start scene 'start'
+game.start('newTableau', { // name of the start scene 'start'
   loader, // Optional loader (but needed for loading images/sounds)
 }).then(() => {
   // Do something after the game starts

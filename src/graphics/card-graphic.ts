@@ -2,8 +2,9 @@ import { Actor, ActorArgs, Color, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
 import { times } from "../utils/times";
-import { ACE, Card, EIGHT, FIVE, FOUR, NINE, SEVEN, SIX, TEN, THREE, TWO, Value } from "../card-shoe/cards/card";
+import { ACE, Card, EIGHT, FIVE, FOUR, NINE, SEVEN, SIX, Suit, TEN, THREE, TWO, Value } from "../card-shoe/cards/card";
 import { Factories } from "../objects/factories";
+import { FlippableActor } from "../scenes/new-tableau/flippable-actor";
 
 const factories = Factories.getInstance()
 const positions: Partial<Record<Value, Vector[]>> = {
@@ -86,7 +87,15 @@ const positions: Partial<Record<Value, Vector[]>> = {
 
 type CardGraphicOpts = ActorArgs & { card: Card, face?: CardSide }
 
-export class CardGraphic extends Actor {
+export class CardGraphic extends Actor implements FlippableActor {
+  static createFaceUp(suit: Suit, value: Value) {
+    return new CardGraphic({ card: new Card(suit, value), face: CardSide.FRONT })
+  }
+
+  static createFaceDown(suit: Suit, value: Value) {
+    return new CardGraphic({ card: new Card(suit, value), face: CardSide.BACK })
+  }
+
   private _side: CardSide
   private _card: Card
   private _label1: Label
@@ -106,6 +115,9 @@ export class CardGraphic extends Actor {
 
     this.updateGraphics()
   }
+
+  get front() { return this._side === CardSide.FRONT }
+  get back() { return this._side === CardSide.BACK }
 
   set followTarget(actor: Actor | undefined) {
     if (actor) {

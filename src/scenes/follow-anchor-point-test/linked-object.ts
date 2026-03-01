@@ -1,5 +1,6 @@
 import { Actor } from "excalibur";
 import { CardGraphic } from "../../graphics/card-graphic";
+import { DrawUtil } from "excalibur/build/dist/Util/Index";
 
 export class LinkedObject {
   private anchor: Actor
@@ -34,6 +35,8 @@ export class LinkedObject {
     if (distance > 1) {
       this.target.actions.clearActions()
       this.target.actions.moveTo({ pos: anchorPosition, duration: 100 })
+    } else {
+      this.target.actions.moveTo({ pos: anchorPosition, duration: 0 })
     }
   }
 }
