@@ -1,4 +1,4 @@
-import { Actor, ActorArgs, Color, Engine, Label, vec, Vector } from "excalibur";
+import { Actor, ActorArgs, CollisionType, Color, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
 import { times } from "../utils/times";
@@ -131,6 +131,7 @@ export class CardGraphic extends Actor implements FlippableActor {
   }
 
   constructor({ card, face, ...restOpts }: CardGraphicOpts) {
+    // @ts-ignore
     super({ ...restOpts })
 
     this._card = card

@@ -19,13 +19,6 @@ export class PhantomCard extends Actor implements FlippableActor {
     this.source.actions.moveTo({ pos: this.pos, duration: 0 })
   }
 
-  override onAdd(engine: Engine): void {
-    super.onAdd(engine)
-
-    this.on('pointerdown', () => { console.log('Pointer down phantom') })
-    this.on('pointerup', () => { console.log('Pointer up phantom') })
-  }
-
   override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed)
 
@@ -33,7 +26,7 @@ export class PhantomCard extends Actor implements FlippableActor {
     const anchor = this.pos.clone()
     const distance = anchor.distance(movable)
 
-    this.source.z = this.z - 1
+    // this.source.z = this.z - 1
     if (distance <= 2 && distance > 0) {
       this.source.actions.moveTo({ pos: anchor, duration: 0 })
     } else if (distance > 2) {

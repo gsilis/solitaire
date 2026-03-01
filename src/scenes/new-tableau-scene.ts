@@ -4,12 +4,13 @@ import { PhantomCard } from "./new-tableau/phantom-card";
 import { HangingStackStrategy } from "./new-tableau/hanging-stack-strategy";
 import { VerticalStackStrategy } from "./new-tableau/vertical-stack-strategy";
 import { CardGraphic } from "../graphics/card-graphic";
-import { ACE, DIAMOND, HEART, SPADE, TEN, THREE, TWO } from "../card-shoe/cards/card";
+import { ACE, DIAMOND, HEART, SPADE, TEN, TWO } from "../card-shoe/cards/card";
 import { StackManager } from "./new-tableau/stack-manager";
 
 const Indices = {
+  SHADOWS: 100,
+  TABLEAU: 2000,
   TEMPORARY: 20000,
-  TABLEAU: 200,
 }
 
 export class NewTableauScene extends Scene {
@@ -62,14 +63,14 @@ export class NewTableauScene extends Scene {
     this.stack2.pos = right
 
     this.temporary.pos = engine.input.pointers.at(0).lastScreenPos
-    // this.temporary.z = Indices.TEMPORARY
+    this.temporary.z = Indices.TEMPORARY
 
-    // this.stack1.z = this.stack2.z = Indices.TABLEAU
-    // const startz = Math.max(this.stack1.z, this.stack2.z) + 200
-    // const cards = [this.card1, this.card2, this.card3]
-    // cards.forEach((c, i) => {
-    //   c.z = startz + i
-    // })
+    this.stack1.z = this.stack2.z = Indices.TABLEAU
+    const startz = Math.max(this.stack1.z, this.stack2.z) + 200
+    const cards = [this.card1, this.card2, this.card3]
+    cards.forEach((c, i) => {
+      c.z = startz + i
+    })
   }
 
   override onDeactivate(context: SceneActivationContext) {

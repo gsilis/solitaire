@@ -47,15 +47,18 @@ export class StackManager {
   }
 
   private onStackDown = (stack: CardAnchor) => {
+    console.log(`STACK ${stack.name}`, stack.z)
+
     if (this.startingStack) {
+      console.log('STACK DOWN - Have starting stack, exiting')
       return
     }
 
-    console.log(`STACK ${stack.name}`)
     this.startingStack = stack
   }
 
   private onStackUp = (stack: CardAnchor) => {
+    console.log(`STACK ${stack.name}`, stack.z)
     if (this.endingStack) {
       return
     }
@@ -64,13 +67,15 @@ export class StackManager {
   }
 
   private onCardDown = (card: FlippableActor) => {
-    if (!this.startingStack || this.startingCard) {
+    //@ts-ignore
+    console.log('CARD DOWN', card.source?._card?.toString(), card.z, card.name, this.startingStack?.name, this.startingCard?.source?._card?.toString())
+
+    if (this.startingCard) {
       return
     }
 
-    console.log(`CARD ${card.toString()}`)
     this.startingCard = card
-    const sequence = this.startingStack.detach(card)
+    const sequence = this.startingStack?.detach(card) || []
 
     if (!sequence || sequence.length === 0) {
       return
@@ -80,7 +85,11 @@ export class StackManager {
   }
 
   private onCardUp = (card: FlippableActor) => {
+    //@ts-ignore
+    console.log('CARD UP', card.source?._card?.toString(), card.z, card.name, this.startingStack?.name, this.startingCard?.source?._card?.toString())
+
     if (this.endingCard) {
+      console.log('CARD UP - Have ending card, exiting')
       return
     }
 

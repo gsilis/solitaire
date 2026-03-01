@@ -83,19 +83,21 @@ export class CardAnchor extends Actor implements FlippableActor {
   }
 
   private orderCards = () => {
-    // let count = 0
+    const zFor = (count: number) => {
+      return -(count * 5) - 10
+    }
 
-    // const zFor = (count: number) => {
-    //   return (count * 5) + 10
-    // }
+    [...this._cards].reverse().forEach((card, index) => {
+      const z = zFor(index)
+      //@ts-ignore
+      console.log(`Set '${card.name}/${card?.source?._card?.toString()}' to '${z}'`)
+      card.z = z
+    })
 
-    // this._cards.forEach((card) => {
-    //   card.z = 10 + zFor(count)
-    //   count++
-    // })
-
-    // if (this._shadowActor && this.hasChild(this._shadowActor)) {
-    //   this._shadowActor.z = 5
-    // }
+    if (this._shadowActor && this.hasChild(this._shadowActor)) {
+      const z = zFor(this._cards.length)
+      this._shadowActor.z = z
+      console.log(`Set shadow to '${z}'`)
+    }
   }
 }
