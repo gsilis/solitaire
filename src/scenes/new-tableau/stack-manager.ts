@@ -7,8 +7,6 @@ export class StackManager {
 
   private startingStack: CardAnchor | undefined
   private startingCard: FlippableActor | undefined
-  private endingStack: CardAnchor | undefined
-  private endingCard: FlippableActor | undefined
   private temporaryStack: CardAnchor
 
   constructor(temporaryStack: CardAnchor) {
@@ -47,10 +45,7 @@ export class StackManager {
   }
 
   private onStackDown = (stack: CardAnchor) => {
-    console.log(`STACK ${stack.name}`, stack.z)
-
     if (this.startingStack) {
-      console.log('STACK DOWN - Have starting stack, exiting')
       return
     }
 
@@ -58,53 +53,57 @@ export class StackManager {
   }
 
   private onStackUp = (stack: CardAnchor) => {
-    console.log(`STACK ${stack.name}`, stack.z)
-    if (this.endingStack) {
+    const firstCard = this.temporaryStack.getCardAt(0)
+    const card = firstCard?.card
+    console.log(firstCard, !!card, card && stack.accepts(card))
+
+    if (!firstCard) {
+      this.startingCard = undefined
+      this.startingStack = undefined
       return
     }
 
-    this.endingStack = stack
+    const cards = this.temporaryStack.detachAll()
+
+    if (card && stack.accepts(card)) {
+      stack.attach(...cards)
+    } else {
+      this.startingStack?.attach(...cards)
+    }
+
+    this.startingCard = undefined
+    this.startingStack = undefined
   }
 
   private onCardDown = (card: FlippableActor) => {
-    //@ts-ignore
-    console.log('CARD DOWN', card.source?._card?.toString(), card.z, card.name, this.startingStack?.name, this.startingCard?.source?._card?.toString())
-
+    console.log(`Card down - ${card.card?.toString()} - ${card.z}`)
     if (this.startingCard) {
       return
     }
 
     this.startingCard = card
-    const sequence = this.startingStack?.detach(card) || []
 
-    if (!sequence || sequence.length === 0) {
+    if (!this.startingStack) {
       return
     }
 
-    this.temporaryStack.attach(...sequence)
+    const cards = this.startingStack.detach(card)
+
+    if (cards) {
+      this.temporaryStack.attach(...cards)
+    }
   }
 
   private onCardUp = (card: FlippableActor) => {
-    //@ts-ignore
-    console.log('CARD UP', card.source?._card?.toString(), card.z, card.name, this.startingStack?.name, this.startingCard?.source?._card?.toString())
-
-    if (this.endingCard) {
-      console.log('CARD UP - Have ending card, exiting')
+    console.log('CARD UP!')
+    if (!this.startingStack) {
       return
     }
 
-    this.endingCard = card
     const cards = this.temporaryStack.detachAll()
-    
-    if (this.endingStack) {
-      this.endingStack.attach(...cards)
-    } else if (this.startingStack) {
-      this.startingStack.attach(...cards)
-    }
+    this.startingStack.attach(...cards)
 
-    this.endingStack = undefined
-    this.endingStack = undefined
     this.startingCard = undefined
-    this.endingCard = undefined
+    this.startingStack = undefined
   }
 }

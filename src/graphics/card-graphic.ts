@@ -1,4 +1,4 @@
-import { Actor, ActorArgs, CollisionType, Color, Engine, Label, vec, Vector } from "excalibur";
+import { Actor, ActorArgs, Color, Engine, Label, vec, Vector } from "excalibur";
 import { CardSide } from "../data/card-side";
 import { Resources } from "../resources";
 import { times } from "../utils/times";
@@ -118,6 +118,7 @@ export class CardGraphic extends Actor implements FlippableActor {
 
   get front() { return this._side === CardSide.FRONT }
   get back() { return this._side === CardSide.BACK }
+  get card() { return this,this._card }
 
   set followTarget(actor: Actor | undefined) {
     if (actor) {
@@ -145,6 +146,7 @@ export class CardGraphic extends Actor implements FlippableActor {
     this._icon2.rotation = Math.PI
     this._icon1.scale.x = this._icon1.scale.y = 0.6
     this._icon2.scale.x = this._icon2.scale.y = 0.6
+    this.collider.clear()
 
     if (!this._card.isFace) {
       this.populateMarkers()

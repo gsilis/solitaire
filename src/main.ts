@@ -11,6 +11,7 @@ import { StateBasedAnimationTest } from "./scenes/state-based-animation-test";
 import { FollowAnimationTest } from "./scenes/follow-animaton-test";
 import { FollowAnchorPointTest } from "./scenes/follow-anchor-point-test";
 import { NewTableauScene } from "./scenes/new-tableau-scene";
+import { ZIndexTestScene } from "./scenes/z-index-test-scene";
 
 declare global {
   interface Window {
@@ -37,6 +38,7 @@ const game = new Engine({
     followAnimationTest: FollowAnimationTest,
     followAnchorPointTest: FollowAnchorPointTest,
     newTableau: NewTableauScene,
+    indexTestScene: ZIndexTestScene,
   },
   canvasElementId: 'game-canvas',
   // physics: {
