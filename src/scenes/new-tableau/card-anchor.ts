@@ -23,7 +23,8 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   get card() { return undefined }
   get special() { return this._special }
   set special(value: boolean) { this._special = value; this.orderCards() }
-  get lastCard() { return this._cards[this._cards.length - 1]?.card || null }
+  get lastCard() { return this.lastCardGraphic?.card || null }
+  get lastCardGraphic() { return this._cards[this._cards.length - 1] }
 
   get shadow() { return this._shadow }
   set shadow(value: boolean) {

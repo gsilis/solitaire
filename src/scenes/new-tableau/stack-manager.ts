@@ -101,6 +101,11 @@ export class StackManager {
       availableStack.attach(...detachedCards)
     }
 
+    const oldStackLastCard = this.startingStack?.lastCardGraphic
+    if (oldStackLastCard?.back) {
+      oldStackLastCard.flip()
+    }
+
     this.startingCard = undefined
     this.startingStack = undefined
     this.collidedStacks = []
