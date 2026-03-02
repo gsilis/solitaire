@@ -23,6 +23,7 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   get card() { return undefined }
   get special() { return this._special }
   set special(value: boolean) { this._special = value; this.orderCards() }
+  get lastCard() { return this._cards[this._cards.length - 1]?.card || null }
 
   get shadow() { return this._shadow }
   set shadow(value: boolean) {
@@ -72,8 +73,8 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
     return this._cards[index]
   }
 
-  accepts(card: Card): boolean {
-    return this._orderingStrategy.accepts(card)
+  accepts(_anchor: CardAnchor, card: Card): boolean {
+    return this._orderingStrategy.accepts(this, card)
   }
 
   override onPreUpdate(engine: Engine, elapsed: number): void {

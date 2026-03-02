@@ -91,7 +91,7 @@ export class StackManager {
     }
 
     const availableStack = this.collidedStacks.reduce<CardAnchor | null>((acceptableStack, stack) => {
-      const stackAcceptable = stack?.accepts(rootCard)
+      const stackAcceptable = stack?.accepts(stack, rootCard)
       return acceptableStack || (stackAcceptable && stack) || null
     }, null) || this.startingStack
 
