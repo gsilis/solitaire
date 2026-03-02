@@ -55,7 +55,6 @@ export class NewTableauScene extends Scene {
     this.stack2.orderingStrategy = new PermissiveOrderingStrategy()
     this.temporary.positioningStrategy = new HangingStackStrategy()
     this.temporary.special = true
-    this.temporary.collider.clear()
     this.stack1.attach(this.card1, this.card2, this.card3)
     this.stack2.attach(this.card4, this.card5)
 

@@ -116,6 +116,7 @@ export class CardGraphic extends Actor implements FlippableActor {
     this.updateGraphics()
   }
 
+  get isRoot() { return false }
   get front() { return this._side === CardSide.FRONT }
   get back() { return this._side === CardSide.BACK }
   get card() { return this,this._card }

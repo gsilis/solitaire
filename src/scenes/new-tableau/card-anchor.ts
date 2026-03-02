@@ -17,6 +17,7 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   private _cachedColliderHeight = 0
 
   flip() {}
+  get isRoot() { return true }
   get front() { return false }
   get back() { return false }
   get card() { return undefined }
@@ -48,7 +49,6 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
 
   attach(...cards: FlippableActor[]) {
     this._cards.push(...cards)
-    console.log(`Attach to ${this.globalZ}`)
     this.orderCards()
   }
 
@@ -85,10 +85,10 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
       return card
     }, this)
 
-    const colliderHeight = (lastCard.pos.y - this.pos.y) + 192
+    const colliderHeight = this.special ? 192 : (lastCard.pos.y - this.pos.y) + 192
     const center = vec(0, (colliderHeight / 2) - 96)
 
-    if (this._cachedColliderHeight !== colliderHeight && !this.special) {
+    if (this._cachedColliderHeight !== colliderHeight) {
       this.collider.useBoxCollider(128, colliderHeight, undefined, center)
       this._cachedColliderHeight = colliderHeight
     }
@@ -111,7 +111,6 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   private orderCards = () => {
     [...this._cards].forEach((card, index) => {
       card.z = (this.special ? this.globalZ : -this.globalZ) + (index * 5)
-      console.log(`Card Order ${card.card?.toString()}; ${card.globalZ}`)
     })
 
     if (this._shadowActor && this.hasChild(this._shadowActor)) {
