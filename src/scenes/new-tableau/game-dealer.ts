@@ -1,7 +1,7 @@
 import { times } from "../../utils/times"
 import { CardAnchor } from "./card-anchor"
 
-export class Dealer {
+export class GameDealer {
   private deck: CardAnchor
   private slots: CardAnchor[]
 

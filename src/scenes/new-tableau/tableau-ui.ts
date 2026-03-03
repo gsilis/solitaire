@@ -1,4 +1,4 @@
-import { Actor, Engine, vec } from "excalibur";
+import { Actor, ActorArgs, Engine, vec } from "excalibur";
 import { EmptyStack } from "../../objects/empty-stack";
 import { CardAnchor } from "./card-anchor";
 import { times } from "../../utils/times";
@@ -12,8 +12,8 @@ const HALF_CARD_WIDTH = 64 + 16
 const HALF_CARD_HEIGHT = 96 + 16
 
 export class TableauUi extends Actor {
-  private emptyDeck = new EmptyStack()
-  private _deckPile = new CardAnchor()
+  private emptyDeck = new EmptyStack({ name: 'EmptyDeck' })
+  private _deckPile = new CardAnchor({ name: 'DeckPile' })
   private _wastePiles: CardAnchor[] = []
   private _foundationPiles: CardAnchor[] = []
   private _tableauPiles: CardAnchor[] = []
@@ -23,24 +23,26 @@ export class TableauUi extends Actor {
   get foundationPiles() { return [...this._foundationPiles] }
   get tableauPiles() { return [...this._tableauPiles] }
 
-  override onInitialize(engine: Engine): void {
-    super.onInitialize(engine)
+  constructor(args?: ActorArgs) {
+    super(args)
 
-    times(3).forEach(() => {
-      const anchor = new CardAnchor()
+    this._deckPile.positioningStrategy = new VerticalStackStrategy()
+    this._deckPile.special = true
+    times(3).forEach((_, index) => {
+      const anchor = new CardAnchor({ name: `Waste${index}` })
       anchor.orderingStrategy = new BlankOrderingStrategy()
       anchor.positioningStrategy = new VerticalStackStrategy()
       this._wastePiles.push(anchor)
     })
-    times(4).forEach(() => {
-      const anchor = new CardAnchor()
+    times(4).forEach((_, index) => {
+      const anchor = new CardAnchor({ name: `Foundation${index}` })
       anchor.shadow = true
       anchor.orderingStrategy = new FoundationOrderingStrategy()
       anchor.positioningStrategy = new VerticalStackStrategy()
       this._foundationPiles.push(anchor)
     })
-    times(7).forEach(() => {
-      const anchor = new CardAnchor()
+    times(7).forEach((_, index) => {
+      const anchor = new CardAnchor({ name: `Tableau${index}` })
       anchor.shadow = true
       anchor.orderingStrategy = new TableauOrderingStrategy()
       anchor.positioningStrategy = new HangingStackStrategy()

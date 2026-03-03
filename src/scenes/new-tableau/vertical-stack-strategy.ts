@@ -8,10 +8,10 @@ const yOffset = 3
 export class VerticalStackStrategy implements PositioningStrategy {
   positionFor(lastCard: FlippableActor, _card: FlippableActor, index: number): Vector {
     const position = lastCard.pos.clone()
-    const offset = Math.floor(index / 5)
+    const offset = Math.floor(index / 6)
 
-    position.x += (offset * xOffset)
-    position.y += (offset * yOffset)
+    position.x = (offset * xOffset)
+    position.y = (offset * yOffset)
 
     return position
   }

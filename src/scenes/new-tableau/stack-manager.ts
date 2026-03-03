@@ -59,6 +59,16 @@ export class StackManager {
     }
 
     this.startingStack = stack
+
+    if (!this.startingCard) {
+      return
+    }
+
+    const cards = this.startingStack.detach(this.startingCard)
+
+    if (cards) {
+      this.temporaryStack.attach(...cards)
+    }
   }
 
   private onCardDown = (card: FlippableActor) => {

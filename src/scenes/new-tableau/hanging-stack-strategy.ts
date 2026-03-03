@@ -2,7 +2,7 @@ import { Vector } from "excalibur";
 import { PositioningStrategy } from "./positioning-strategy";
 import { FlippableActor } from "./flippable-actor";
 
-const backOffset = 10
+const backOffset = 15
 const frontOffset = 30
 
 export class HangingStackStrategy implements PositioningStrategy {
