@@ -107,14 +107,21 @@ export class StackManager {
       return
     }
 
+    const foundationStacks = this.anchors.filter(a => a.foundation)
     const availableStack = this.collidedStacks.reduce<CardAnchor | null>((acceptableStack, stack) => {
       const stackAcceptable = stack?.accepts(stack, rootCard)
       return acceptableStack || (stackAcceptable && stack) || null
     }, null) || this.startingStack
+    const acceptableFoundationStack = foundationStacks.reduce((acceptableStack, stack) => {
+      const stackAcceptable = stack?.accepts(stack, rootCard)
+      return acceptableStack || (stackAcceptable && stack) || null
+    }, null)
 
     const detachedCards = this.temporaryStack.detachAll()
 
-    if (availableStack) {
+    if (availableStack === this.startingStack && detachedCards.length === 1 && acceptableFoundationStack) {
+      acceptableFoundationStack.attach(...detachedCards)
+    } else if (availableStack) {
       availableStack.attach(...detachedCards)
     }
 
