@@ -15,6 +15,7 @@ export class GaemOver extends Scene {
     super.onActivate(context)
 
     game.state = State.GAME_OVER
+    game.wins++
   }
 
   onPreUpdate(engine: Engine, elapsed: number): void {
@@ -46,7 +47,7 @@ export class GaemOver extends Scene {
   }
 
   private onNewGameClick = () => {
-    this.engine.goToScene('table')
+    this.engine.goToScene('newTableau')
   }
 
   private onMainMenu = () => {

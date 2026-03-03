@@ -8,7 +8,8 @@ import { HangingStackStrategy } from "./new-tableau/hanging-stack-strategy";
 import { CardDealer } from "./new-tableau/card-dealer";
 import { GameData, State } from "../data/game-data";
 import { GameMenu } from "./new-tableau/game-menu";
-import { Card } from "../card-shoe/cards/card";
+import { Card, KING, suits, values } from "../card-shoe/cards/card";
+import { PhantomCard } from "./new-tableau/phantom-card";
 
 const game = GameData.getInstance()
 
@@ -23,11 +24,14 @@ export class NewTableauScene extends Scene {
   private cardDealer = new CardDealer(this.tableauUi.deck, this.tableauUi.wastePiles)
   private gameMenu = new GameMenu()
   private cachedCards: Card[] = []
+  private phantomCards: PhantomCard[] = []
 
   override onInitialize(engine: Engine): void {
     super.onInitialize(engine)
 
     this.stackManager = new StackManager(this.temporary, this.onStackChange)
+    //@ts-ignore
+    window['scene'] = this
   }
 
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
@@ -69,7 +73,11 @@ export class NewTableauScene extends Scene {
   private setTable = () => {
     this.gameDeck.teardown()
 
-    const phantomCards = this.gameDeck.setup(game)
+    if (this.stackManager) {
+      this.stackManager.cleanup()
+    }
+
+    this.phantomCards = this.gameDeck.setup(game)
     const stacks = [
       ...this.tableauUi.tableauPiles,
       ...this.tableauUi.foundationPiles,
@@ -86,15 +94,29 @@ export class NewTableauScene extends Scene {
     game.plays += 1
     game.attempts = 1
 
-    if (!this.stackManager) return
-    this.stackManager.addCards(...phantomCards)
-    this.stackManager.addStacks(...stacks)
+    if (this.stackManager) {
+      this.stackManager.addCards(...this.phantomCards)
+      this.stackManager.addStacks(...stacks)
+    }
 
     this.gameMenu.enabled = true
   }
 
   private onStackChange = (stack: CardAnchor) => {
     this.cardDealer.update()
+
+    const hasWon = this.tableauUi.foundationPiles.reduce((win, pile) => {
+      return win && pile.lastCard?.value === KING
+    }, true)
+
+    if (hasWon) {
+      const cards = this.tableauUi.foundationPiles.map((pile) => {
+        return pile.tree()
+      })
+      this.clearTable()
+      this.gameDeck.teardown()
+      this.engine.goToScene('gameOverAnimating', { sceneActivationData: cards })
+    }
   }
 
   private clearTable = () => {
@@ -126,5 +148,29 @@ export class NewTableauScene extends Scene {
     this.clearTable()
     game.reset([ ... this.cachedCards ])
     this.setTable()
+  }
+  
+  // @ts-ignore
+  private debugSolve() {
+    const order = [ ...values ]
+    const ace = order.pop()
+    if (ace) order.unshift(ace)
+    let count = 0
+    this.clearTable()
+
+    order.forEach((value) => {
+      const cards = this.phantomCards.filter(c => c.card?.value === value)
+      cards.forEach(card => {
+        const suit = card.card?.suit
+        const target = suit ? this.tableauUi.foundationPiles[suits.indexOf(suit)] : null
+        card.back && card.flip()
+        if (count < 51) {
+          target && target.attach(card)
+        } else {
+          this.tableauUi.tableauPiles[this.tableauUi.tableauPiles.length - 1].attach(card)
+        }
+        count++
+      })
+    })
   }
 }

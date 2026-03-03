@@ -51,10 +51,13 @@ export class StackManager {
     this.startingCard = undefined
     this.startingStack = undefined
     this.collidedStacks = []
-    this.temporaryStack.off('collisionend')
-    this.temporaryStack.off('collisionstart')
     this.anchors = []
     this.cards = []
+  }
+
+  teardown() {
+    this.temporaryStack.off('collisionend')
+    this.temporaryStack.off('collisionstart')
   }
 
   private onStackDown = (stack: CardAnchor) => {

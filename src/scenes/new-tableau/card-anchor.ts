@@ -52,6 +52,10 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
     this._orderingStrategy = value
   }
 
+  tree() {
+    return this._cards.map(c => c.card)
+  }
+
   attach(...cards: FlippableActor[]) {
     this._cards.push(...cards)
     this.orderCards()
