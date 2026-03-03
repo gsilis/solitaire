@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <div x-show="isPlaying" id="playing" class="w-screen flex flex-row items-center absolute bottom-[30px]">
+        <div x-show="isPlaying" id="playing" class="w-screen flex flex-row items-center absolute bottom-0">
           <button id="quit-button" class="button m-3">Quit</button>
           <button id="redeal-button" class="button m-3">New Game</button>
           <button id="reset-button" class="button m-3">Reset</button>
@@ -49,7 +49,7 @@
             <span class="value" x-text="wins"></span>
           </span>
         </div>
-        <div x-show="isGameOverAnimating" id="game_over_animating" class="w-screen flex flex-row items-center absolute bottom-[30px]">
+        <div x-show="isGameOverAnimating" id="game_over_animating" class="w-screen flex flex-row items-center absolute bottom-0">
           <div class="spacer"></div>
           <span class="label" id="gmae-attempts">
             <span class="title">Attempts: </span>

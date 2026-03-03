@@ -5,8 +5,6 @@ import { CardGraphic } from "../../graphics/card-graphic";
 import { GameData } from "../../data/game-data";
 import { Card } from "../../card-shoe/cards/card";
 
-const game = GameData.getInstance()
-
 export class GameDeck {
   private scene: Scene
   private deck: CardAnchor
@@ -18,8 +16,7 @@ export class GameDeck {
     this.scene = scene
   }
 
-  setup(): PhantomCard[] {
-    game.shuffle()
+  setup(game: GameData): PhantomCard[] {
     let card: Card | void
 
     while (card = game.deal()) {
@@ -39,5 +36,7 @@ export class GameDeck {
 
   teardown() {
     [...this.phantoms, ...this.graphics].forEach(a => this.scene.remove(a))
+    this.phantoms = []
+    this.graphics = []
   }
 }

@@ -48,6 +48,6 @@ export class MenuScene extends Scene {
   }
 
   private onPlay = () => {
-    this.engine.goToScene('table')
+    this.engine.goToScene('newTableau')
   }
 }
