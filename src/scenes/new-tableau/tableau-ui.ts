@@ -5,11 +5,12 @@ import { times } from "../../utils/times";
 import { BlankOrderingStrategy } from "./blank-ordering-strategy";
 import { FoundationOrderingStrategy } from "./foundation-ordering-strategy";
 import { TableauOrderingStrategy } from "./tableau-ordering-strategy";
-import { VerticalStackStrategy } from "./vertical-stack-strategy";
 import { HangingStackStrategy } from "./hanging-stack-strategy";
+import { ZeroPositionStrategy } from "./zero-position-strategy";
 
 const HALF_CARD_WIDTH = 64 + 16
 const HALF_CARD_HEIGHT = 96 + 16
+const WASTE_PILE = 10000
 
 export class TableauUi extends Actor {
   private emptyDeck = new EmptyStack({ name: 'EmptyDeck' })
@@ -26,19 +27,21 @@ export class TableauUi extends Actor {
   constructor(args?: ActorArgs) {
     super(args)
 
-    this._deckPile.positioningStrategy = new VerticalStackStrategy()
+    this.emptyDeck.z = -WASTE_PILE
+    this._deckPile.positioningStrategy = new ZeroPositionStrategy()
     this._deckPile.special = true
     times(3).forEach((_, index) => {
       const anchor = new CardAnchor({ name: `Waste${index}` })
       anchor.orderingStrategy = new BlankOrderingStrategy()
-      anchor.positioningStrategy = new VerticalStackStrategy()
+      anchor.positioningStrategy = new ZeroPositionStrategy()
+      anchor.z = WASTE_PILE - (index * 1000)
       this._wastePiles.push(anchor)
     })
     times(4).forEach((_, index) => {
       const anchor = new CardAnchor({ name: `Foundation${index}` })
       anchor.shadow = true
       anchor.orderingStrategy = new FoundationOrderingStrategy()
-      anchor.positioningStrategy = new VerticalStackStrategy()
+      anchor.positioningStrategy = new ZeroPositionStrategy()
       this._foundationPiles.push(anchor)
     })
     times(7).forEach((_, index) => {

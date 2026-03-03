@@ -15,6 +15,7 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   private _orderingStrategy: OrderingStrategy = new BlankOrderingStrategy()
   private _special = false
   private _cachedColliderHeight = 0
+  private _enabled = true
 
   flip() {}
   get isRoot() { return true }
@@ -25,6 +26,8 @@ export class CardAnchor extends Actor implements FlippableActor, OrderingStrateg
   set special(value: boolean) { this._special = value; this.orderCards() }
   get lastCard() { return this.lastCardGraphic?.card || null }
   get lastCardGraphic() { return this._cards[this._cards.length - 1] }
+  get enabled() { return this._enabled }
+  set enabled(value: boolean) { this._enabled = value }
 
   get shadow() { return this._shadow }
   set shadow(value: boolean) {

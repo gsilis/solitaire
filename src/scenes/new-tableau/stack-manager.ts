@@ -2,17 +2,21 @@ import { CollisionEndEvent, CollisionStartEvent } from "excalibur";
 import { CardAnchor } from "./card-anchor";
 import { FlippableActor } from "./flippable-actor";
 
+type StackCallback = (stack: CardAnchor) => void
+
 export class StackManager {
   private anchors: CardAnchor[] = []
   private cards: FlippableActor[] = []
+  private callback: StackCallback
 
   private startingStack: CardAnchor | undefined
   private startingCard: FlippableActor | undefined
   private collidedStacks: CardAnchor[] = []
   private temporaryStack: CardAnchor
 
-  constructor(temporaryStack: CardAnchor) {
+  constructor(temporaryStack: CardAnchor, callback: StackCallback) {
     this.temporaryStack = temporaryStack
+    this.callback = callback
     this.temporaryStack.on('collisionend', this.onTemporaryStackCollisionEnd)
     this.temporaryStack.on('collisionstart', this.onTemporaryStackCollisionStart)
   }
@@ -54,7 +58,7 @@ export class StackManager {
   }
 
   private onStackDown = (stack: CardAnchor) => {
-    if (this.startingStack) {
+    if (this.startingStack || !stack.enabled) {
       return
     }
 
@@ -72,7 +76,7 @@ export class StackManager {
   }
 
   private onCardDown = (card: FlippableActor) => {
-    if (this.startingCard) {
+    if (this.startingCard || card.back) {
       return
     }
 
@@ -119,6 +123,7 @@ export class StackManager {
     this.startingCard = undefined
     this.startingStack = undefined
     this.collidedStacks = []
+    if (availableStack) this.callback(availableStack)
   }
 
   private onTemporaryStackCollisionStart = (event: CollisionStartEvent) => {
