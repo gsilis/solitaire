@@ -4,6 +4,7 @@ import { CardAnchor } from "./new-tableau/card-anchor";
 import { TableauUi } from "./new-tableau/tableau-ui";
 import { GameDeck } from "./new-tableau/game-deck";
 import { GameDealer } from "./new-tableau/game-dealer";
+import { HangingStackStrategy } from "./new-tableau/hanging-stack-strategy";
 
 export class NewTableauScene extends Scene {
   private temporary = new CardAnchor()
@@ -18,6 +19,8 @@ export class NewTableauScene extends Scene {
     //@ts-ignore
     window['scene'] = this
 
+    this.temporary.positioningStrategy = new HangingStackStrategy()
+    this.temporary.z = 20000
     this.actorAssets.forEach(a => this.add(a))
     this.gameDeck.teardown()
 
