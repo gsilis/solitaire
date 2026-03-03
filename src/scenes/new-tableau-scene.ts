@@ -24,9 +24,6 @@ export class NewTableauScene extends Scene {
   override onActivate(context: SceneActivationContext<unknown, undefined>): void {
     super.onActivate(context)
 
-    //@ts-ignore
-    window['scene'] = this
-
     this.temporary.positioningStrategy = new HangingStackStrategy()
     this.temporary.z = 20000
     this.temporary.special = true
