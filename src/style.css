@@ -91,4 +91,9 @@
     backdrop-filter: blur(10px);
     background: radial-gradient(ellipse at 50% -50%, var(--white-bg) 0%, var(--blue-bg) 60%);
   }
+
+  .safe-bottom {
+    bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
