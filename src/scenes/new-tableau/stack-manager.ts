@@ -112,7 +112,7 @@ export class StackManager {
       const stackAcceptable = stack?.accepts(stack, rootCard)
       return acceptableStack || (stackAcceptable && stack) || null
     }, null) || this.startingStack
-    const acceptableFoundationStack = foundationStacks.reduce((acceptableStack, stack) => {
+    const acceptableFoundationStack = foundationStacks.reduce<CardAnchor | null>((acceptableStack, stack) => {
       const stackAcceptable = stack?.accepts(stack, rootCard)
       return acceptableStack || (stackAcceptable && stack) || null
     }, null)
