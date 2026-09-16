@@ -11,7 +11,7 @@ export class GameDealer {
   }
 
   deal() {
-    return new Promise<undefined>((resolve) => {
+    return new Promise<undefined>(async (resolve) => {
       const targets = [...this.slots]
       const targetSequence: CardAnchor[] = []
 
@@ -20,11 +20,17 @@ export class GameDealer {
         targets.shift()
       }
 
-      times(28).forEach(() => {
+      // Allow some time for the cards to be attached to the deck
+      await new Promise(r => setTimeout(r, 10))
+
+      times(28).forEach((_, index) => {
         const card = this.deck.detach(this.deck.lastCardGraphic)
         const target = targetSequence.shift()
 
-        if (target) target.attach(...card)
+        if (target) {
+          card.forEach(c => c.delay(index * 150))
+          target.attach(...card)
+        }
       })
 
       this.slots.forEach((slot) => {

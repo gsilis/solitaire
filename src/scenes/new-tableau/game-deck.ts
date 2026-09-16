@@ -19,6 +19,7 @@ export class GameDeck {
   setup(game: GameData): PhantomCard[] {
     let card: Card | void
 
+    this.deck.forceCards = true
     while (card = game.deal()) {
       const source = new CardGraphic({ card })
       const phantom = new PhantomCard({ source })
@@ -30,6 +31,7 @@ export class GameDeck {
       this.scene.add(phantom)
       this.deck.attach(phantom)
     }
+    this.deck.forceCards = false
 
     return this.phantoms
   }

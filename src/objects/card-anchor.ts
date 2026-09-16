@@ -103,6 +103,7 @@ export abstract class CardAnchor extends Actor implements Stackable {
       this.pos.y + this.yPositionFor(length)
     )
     if (this._forceCardUpdate) {
+      console.log('FORCING UPDATE')
       stackableActor.pos = pos
     } else {
       stackableActor.actions.clearActions()

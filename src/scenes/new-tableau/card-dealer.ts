@@ -28,7 +28,10 @@ export class CardDealer {
     if (this._deck.lastCard !== null) {
       times(game.dealCount).forEach((_, index) => {
         const cards = this._deck.detach(this._deck.lastCardGraphic)
-        cards.forEach(c => c.flip())
+        cards.forEach(c => {
+          c.delay(index * 300)
+          c.flip()
+        })
         this._wastePiles[index].attach(...cards)
       })
     } else {
